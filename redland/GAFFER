@@ -1,0 +1,372 @@
+
+Gaffer data model
+=================
+
+Gaffer stores data as two types of thing:
+- Entity.  Has a name ("vertex") and properties.  Storing an entity multiple
+  times results in a single entity.  Properties from the various entities
+  are "aggregated" into the entity.
+- Edge.  Has a source vertex, destination vertex and set of properties.
+  Storing an edge multiple times results in a single edge, with properties
+  aggregated into the edge.  Edges can be directed, or not.  Directed edges
+  have defined source and destination.  Undirected edges appear to be
+  ambiguous regarding the direction.
+
+The aggregation algorithms for properties are defined in the data model.
+The Gaffer Getting Started guide demonstrates string concatenation, but there
+are other algorithms available e.g. frequency map aggregation.
+
+While edges have vertex names for the source and destination, there is no
+requirement for the referenced entities to exist.
+
+A variety of data navigations are possible:
+- From vertex name, you can discover the entity with that name along with its
+  properties.
+- From a vertex name, you can discover edges with source or destination having
+  that vertex name.  This gives you the edge properties.
+- From an edge (specified using source/destination vertex) you can discover the
+  source and destination entities along with their properties.
+- There are operations which can be used to discover entities whose vertex
+  name is in a key range.  This can return a large set of keys.
+- Similarly, the vertex name range query can be used to obtain edges whose
+  source or destination are vertex names in a range.  Again, this can return
+  a large set of edges.
+- Filters can be applied to edge or entity queries, applied server-side,
+  to limit the set of data which is returned.  Filters can't be applied to
+  key range queries.
+
+In conclusion, there are only two ways to discover data:
+- Using entity vertex names.
+- Key range query.
+
+Observations on using Gaffer to store RDF
+=========================================
+
+                      predicate
+            subject -------------> object
+
+- Nodes names (i.e. subjects and objects) can be stored as edge
+  source/destination names.
+- Edges do not have have names, so it is necessary to store predicates
+  somewhere else.  
+- There appears to be no way to discover edges or entities by properties,
+  other than doing large queries.
+
+Thus, using an edge property to describe predicates means that the edges can't
+be discovered.
+
+Thus considering the full set of statement searches that would be needed:
+- Many searches can be satisfied using a "related edges" search: S?? ?P? SP?
+  SPO.
+- A search with no constraints can be satisfied using a key range search: ???
+
+
+Storing data
+============
+
+To keep all data discoverable, I'm storing all data twice:
+- An edge with Subject, Object as vertex names, and Predicate as an edge
+  property.
+- An edge with Subject, Predicate as vertex names, and Object as an edge
+  property.
+
+I have to deal with the case where the same (S, O) pair may be used for more
+than edge.  So, we're going to use a freqency map for the edge properties,
+with the different predicates as keys.  We use a FreqMapAggregator to
+aggregate the edges.
+
+As we have two types of edge, these will be differentiated:
+- To differentiate in vertex names, the subjects and objects will be prefixed
+  'n:', and preficates prefixed 'r:'.
+- For filtering, subjects/objects will have an '@n' entry in the freqency
+  map, predicates will have an '@r' entry.
+
+We have no use for entities - the edges carry all the information we need.
+
+Storage request
+===============
+
+Example, a record describing that lions eat zebra:
+
+  <http://ex.org/#lion> <http://ex.org/#eats> <http://ex.org/#zebra>
+
+REST interface /graph/doOperation/add/elements
+
+{
+    "elements": [
+	{
+	    "class": "gaffer.data.element.Edge",
+	    "properties": {
+		"name": {"r:http://ex.org/#eats": 1},
+		"type": {"@r": 1}
+	    },
+	    "group": "BasicEdge",
+	    "source": "n:http://ex.org/#lion",
+	    "destination": "n:http://ex.org/#zebra",
+	    "directed": true
+	},
+	{
+	    "class": "gaffer.data.element.Edge",
+	    "properties": {
+		"name": {"n:http://ex.org/#zebra": 1},
+		"type": {"@n": 1}
+	    },
+	    "group": "BasicEdge",
+	    "source": "n:http://ex.org/#lion",
+	    "destination": "r:http://ex.org/#eats",
+	    "directed": true
+	}
+    ]
+}
+
+Query strategy
+==============
+
+There are 8 query types.
+
+? ? ?
+=====
+
+Unconstrained query, returns all information.  Could be a lot of data.
+This fetches all the 'node' edges using a range query.  To constrain the data
+to ensure we don't fetch both copies of each edge, the range query targets
+only edges arriving at an object i.e. the SO->P edges.
+
+REST interface /graph/doOperation
+
+{
+    "operations": [
+	{
+	    "class": "gaffer.accumulostore.operation.impl.GetEdgesInRanges",
+	    "seeds": [
+		{
+		    "gaffer.accumulostore.utils.Pair": {
+			"first": {
+			    "gaffer.operation.data.EntitySeed": {
+				"vertex": "n:"
+			    }
+			},
+			"second": {
+			    "gaffer.operation.data.EntitySeed": {
+				"vertex": "n;"
+			    }
+			}
+		    }
+		}
+	    ],
+	    "includeIncomingOutGoing": "INCOMING"
+	}
+    ]
+}
+
+S ? ?
+=====
+
+Searching for a subject vertex name will result in two copies of each edge.
+To avoid this, we can apply a filter to limit to the SO->P edges.
+
+REST interface /graph/doOperation/get/edges/related
+
+{
+    "view": {
+	"edges": {
+	    "BasicEdge": {
+		"filterFunctions": [
+		    {
+			"function": {
+			    "class": "gaffer.function.simple.filter.IsMoreThan"
+			    "value": "r:"
+			},
+			"selection": [
+			    {
+				"key": "name"
+			    }
+			]
+		    }
+		]
+	    }
+	}
+    }
+    "seeds": [
+	{
+	    "gaffer.operation.data.EntitySeed": {
+		"vertex": "n:http://ex.org/#lion"
+	    }
+	}
+    ],
+    "includeIncomingOutGoing": "OUTGOING"
+}
+
+? P ?
+=====
+
+Searching on predicates, is done by seeding on the SP->O edges.  Nothing
+complicated needed.
+
+REST interface /graph/doOperation/get/edges/related
+
+{
+    "seeds": [
+	{
+	    "gaffer.operation.data.EntitySeed": {
+		"vertex": "n:http://ex.org/#zebra"
+	    }
+	}
+    ],
+    "includeIncomingOutGoing": "INCOMING"
+}
+
+? ? O
+=====
+
+Searching on objects, is done by seeding on the SO->P edges.  Nothing
+complicated needed.
+
+REST interface /graph/doOperation/get/edges/related
+
+{
+    "seeds": [
+        {
+	    "gaffer.operation.data.EntitySeed": {
+		"vertex": "r:http://ex.org/#eats"
+	    }
+	}
+    ],
+    "includeIncomingOutGoing": "INCOMING"
+}
+
+S P ?
+=====
+
+Searching on subject and predicate, is done by seeding on the SP->O edges.
+
+REST interface /graph/doOperation/get/edges/related
+
+{
+    "seeds": [
+	{
+	    "gaffer.operation.data.EdgeSeed": {
+		"source": "n:http://ex.org/#lion",
+		"destination": "n:http://ex.org/#zebra",
+		"directed": true
+	    }
+	}
+    ],
+    "includeIncomingOutGoing": "INCOMING"
+}
+
+? P O
+=====
+
+For this query, we seed on the object name to get all incoming SO->P edges,
+and then use a filter to discard edges which don't match our predicate.
+
+REST interface /graph/doOperation/get/edges/related
+
+{
+    "view": {
+	"edges": {
+	    "BasicEdge": {
+		"filterFunctions": [
+		    {
+			"function": {
+			    "class": "gaffer.function.simple.filter.IsEqual",
+			    "value": "r:http://ex.org/#eats"
+			},
+			"selection": [
+			    {
+				"key": "name"
+			    }
+			]
+		    }
+		]
+	    }
+	}
+    },
+    "seeds": [
+	{
+	    "gaffer.operation.data.EntitySeed": {
+		"vertex": "n:http://ex.org/#zebra"
+	    }
+	}
+    ],
+    "includeIncomingOutGoing": "INCOMING"
+}
+
+S ? O
+=====
+
+For this query, we seed on the subject name, and then filter on the
+object names.
+
+FIXME: Why not an edge seed on the SO->P edges?
+
+REST interface /graph/doOperation/get/edges/related
+
+{
+    "view": {
+	"edges": {
+	    "BasicEdge": {
+		"filterFunctions": [
+		    {
+			"function": {
+			    "class": "gaffer.function.simple.filter.IsEqual",
+			    "value": "r:http://ex.org/#eats"
+			},
+			"selection": [
+			    {
+				"key": "name"
+			    }
+			]
+		    }
+		]
+	    }
+	}
+    },
+    "seeds": [
+	"gaffer.operation.data.EntitySeed": {
+	    "vertex": "n:http://ex.org/#lion"
+	}
+    ],
+    "includeIncomingOutGoing": "OUTGOING"
+}
+
+S P O
+=====
+
+This is an existence test, search the SP->O edges with an edge seed,
+and filter on the predicates.
+
+REST interface /graph/doOperation/get/edges/related
+
+{
+    "view": {
+	"edges": {
+	    "BasicEdge": {
+		"filterFunctions": [
+		    {
+			"function": {
+			    "class": "gaffer.function.simple.filter.IsEqual",
+			    "value": "r:http://ex.org/#eats"
+			},
+			"selection": [
+			    {
+				"key": "name"
+			    }
+			]
+		    }
+		]
+	    }
+	}
+    },
+    "seeds": [
+	{
+	    "gaffer.operation.data.EdgeSeed": {
+		"source": "n:http://ex.org/#lion",
+		"destination": "n:http://ex.org/#zebra",
+		"directed": true
+	    }
+	}
+    ]
+}
+
