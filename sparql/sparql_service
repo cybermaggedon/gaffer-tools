@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+
+import BaseHTTPServer
+import time
+import RDF
+import urllib
+import urlparse
+import xml.etree.ElementTree as ElementTree
+import sys
+
+storage = RDF.Storage(storage_name="gaffer", name="localhost",
+                      options_string="")
+
+model = RDF.Model(storage)
+
+############################################################################
+# Request handler
+############################################################################
+class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+
+    # HTTP head request
+    def do_HEAD(s):
+        s.send_response(200)
+        s.send_header("Content-type", "text/html")
+        s.end_headers()
+
+    def do_sparql(s):
+
+        url = urlparse.urlparse(s.path)
+        query = urlparse.parse_qs(url.query)["query"][0]
+
+        print "Received SPARQL query:", query
+
+        query = RDF.SPARQLQuery(query)
+
+        results = model.execute(query)
+
+        body = str(results)
+
+        s.send_response(200)
+        s.send_header("Content-type", "text/plain")
+	s.send_header("Content-length", len(body))
+	s.end_headers()
+
+	s.wfile.write(body)
+
+    def do_GET(s):
+
+        if s.path.startswith("/sparql?"):
+            s.do_sparql()
+            return
+
+        body = "Not found"
+
+        s.send_response(404)
+        s.send_header("Content-type", "text/plain")
+	s.send_header("Content-length", len(body))
+	s.end_headers()
+
+	s.wfile.write(body)
+
+############################################################################
+# HTTP Server
+############################################################################
+class HTTPServer(BaseHTTPServer.HTTPServer):
+
+    def __init__(s, host, port, handler):
+        s.host = host
+        s.port = port
+        BaseHTTPServer.HTTPServer.__init__(s, (host, port), handler)
+
+    def run(s):
+        print time.asctime(), "Server Starts - %s:%d" % (s.host, s.port)
+
+        # Serve indefinitely.
+        try:
+            s.serve_forever()
+        except KeyboardInterrupt:
+            s.server_close()
+            print time.asctime(), "Server Stops - %s:%d" % (s.host, s.port)
+
+host = "localhost"
+port = 8081
+
+h = HTTPServer(host, port, RequestHandler)
+
+h.run()
+
