@@ -1,0 +1,188 @@
+#!/usr/bin/env python
+
+import BaseHTTPServer
+import time
+import md5
+import json
+from py4j.java_gateway import JavaGateway
+
+gateway = JavaGateway()
+
+############################################################################
+# Request handler
+############################################################################
+class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+
+    # HTTP head request
+    def do_HEAD(s):
+        s.send_response(200)
+        s.send_header("Content-type", "text/html")
+        s.end_headers()
+
+    def do_status(s):
+
+        body = '{ "description": "Working fine." }'
+
+        s.send_response(200)
+        s.send_header("Content-type", "application/json")
+        s.send_header("Content-length", len(body))
+        s.end_headers()
+        s.wfile.write(body)
+
+    def do_size(s):
+
+        body = '{ "size": 11231 }'
+
+        s.send_response(200)
+        s.send_header("Content-type", "application/json")
+        s.send_header("Content-length", len(body))
+        s.end_headers()
+        s.wfile.write(body)
+
+    def do_count(s):
+
+        body = '{ "count": 0 }'
+
+        s.send_response(200)
+        s.send_header("Content-type", "application/json")
+        s.send_header("Content-length", len(body))
+        s.end_headers()
+        s.wfile.write(body)
+
+    def do_add(s, b):
+
+        try:
+            gateway.addElements(b)
+        except Exception, e:
+            print e
+            s.send_response(500)
+            s.end_headers()
+            return
+
+        s.send_response(204)
+        s.end_headers()
+
+    def do_remove(s):
+
+        body = '{ "success": "true" }'
+
+        s.send_response(200)
+        s.send_header("Content-type", "application/json")
+        s.send_header("Content-length", len(body))
+        s.end_headers()
+        s.wfile.write(body)
+
+    def do_relatededges(s, body):
+
+        try:
+            result = gateway.getRelatedEdges(body)
+        except Exception, e:
+            print e
+            s.send_response(500)
+            s.end_headers()
+            return
+
+        s.send_response(200)
+        s.send_header("Content-type", "application/json")
+        s.send_header("Content-length", len(result))
+        s.end_headers()
+        s.wfile.write(result)
+
+    def do_operation(s, body):
+
+        try:
+            result = gateway.doOperation(body)
+        except Exception, e:
+            print e
+            s.send_response(500)
+            s.end_headers()
+            return
+
+        s.send_response(200)
+        s.send_header("Content-type", "application/json")
+        s.send_header("Content-length", len(result))
+        s.end_headers()
+        s.wfile.write(result)
+
+    def do_GET(s):
+        
+        if s.path == "/status":
+            s.do_status()
+            return
+            
+        if s.path == "/size":
+            s.do_size()
+            return
+            
+        if s.path == "/count":
+            s.do_count()
+            return
+                  
+        if s.path == "/remove":
+            s.do_remove()
+            return
+            
+	body = "Hello world"
+
+        s.send_response(200)
+        s.send_header("Content-type", "text/plain")
+	s.send_header("Content-length", len(body))
+	s.end_headers()
+
+	s.wfile.write(body)
+    
+    # HTTP POST request
+    def do_POST(s):
+
+        # Get the HTTP bdoy
+        varLen = int(s.headers['Content-Length'])
+        data = s.rfile.read(varLen)
+
+        if s.path == "/graph/doOperation/add/elements":
+            s.do_add(data)
+            return
+             
+        if s.path == "/graph/doOperation/get/edges/related":
+            s.do_relatededges(data)
+            return
+             
+        if s.path == "/graph/doOperation":
+            s.do_operation(data)
+            return
+             
+	body = "Hello world"
+
+        s.send_response(200)
+        s.send_header("Content-type", "text/plain")
+	s.send_header("Content-length", len(body))
+	s.end_headers()
+
+	s.wfile.write(body)
+
+############################################################################
+# HTTP Server
+############################################################################
+class HTTPServer(BaseHTTPServer.HTTPServer):
+
+    def __init__(s, host, port, handler):
+        s.host = host
+        s.port = port
+        BaseHTTPServer.HTTPServer.__init__(s, (host, port), handler)
+
+    def run(s):
+        print time.asctime(), "Server Starts - %s:%d" % (s.host, s.port)
+
+        # Serve indefinitely.
+        try:
+            s.serve_forever()
+        except KeyboardInterrupt:
+            s.server_close()
+            print time.asctime(), "Server Stops - %s:%d" % (s.host, s.port)
+
+host = "localhost"
+port = 8080
+
+h = HTTPServer(host, port, RequestHandler)
+
+h.run()
+

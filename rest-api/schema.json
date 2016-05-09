@@ -1,0 +1,68 @@
+{
+    "edges": {
+	"BasicEdge": {
+	    "properties": {
+		"name": "freq.map"
+	    },
+	    "source": "vertex.string",
+	    "destination": "vertex.string",
+	    "directed": "boolean"
+	}
+    },
+    "entities": {
+	"BasicEntity": {
+	    "properties": {
+	    },
+	    "vertex": "vertex.string"
+	}
+    },
+    "types": {
+	"simple.string": {
+	    "position": "VALUE",
+	    "aggregateFunction": {
+		"class": "gaffer.function.simple.aggregate.StringConcat"
+	    },
+	    "validateFunctions": [
+		{
+		    "function": {
+			"class": "gaffer.function.simple.filter.Exists"
+		    }
+		}
+	    ],
+	    "class": "java.lang.String"
+	},
+	"freq.map": {
+	    "position": "VALUE",
+	    "aggregateFunction": {
+		"class": "gaffer.function.simple.aggregate.FreqMapAggregator"
+	    },
+	    "class": "gaffer.function.simple.types.FreqMap"
+	},
+	"vertex.string": {
+	    "validateFunctions": [
+		{
+		    "function": {
+			"class": "gaffer.function.simple.filter.Exists"
+		    }
+		}
+	    ],
+	    "class": "java.lang.String"
+	},
+	"boolean": {
+	    "validateFunctions": [
+		{
+		    "function": {
+			"class": "gaffer.function.simple.filter.IsTrue"
+		    }
+		}
+	    ],
+	    "class": "java.lang.Boolean"
+	}
+    },
+    "vertexSerialiserClass": "gaffer.serialisation.simple.StringSerialiser"
+}
+
+
+
+
+
