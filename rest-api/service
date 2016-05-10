@@ -82,6 +82,8 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             s.end_headers()
             return
 
+        result = result.encode('utf8')
+
         s.send_response(200)
         s.send_header("Content-type", "application/json")
         s.send_header("Content-length", len(result))
@@ -97,6 +99,8 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             s.send_response(500)
             s.end_headers()
             return
+
+        result = result.encode('utf8')
 
         s.send_response(200)
         s.send_header("Content-type", "application/json")
@@ -156,7 +160,6 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.send_header("Content-type", "text/plain")
 	s.send_header("Content-length", len(body))
 	s.end_headers()
-
 	s.wfile.write(body)
 
 ############################################################################
