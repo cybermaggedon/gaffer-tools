@@ -468,10 +468,10 @@ int gaffer_add_batch(gaffer_comms* gc,
 	add_node_object(elts, onode);
 
 	/* Create S,O -> P */
-	add_edge_object(elts, pnode, snode, onode, "r");
+	add_edge_object(elts, pnode, snode, onode, "@r");
       
 	/* Create S,P -> O */
-	add_edge_object(elts, onode, snode, pnode, "n");
+	add_edge_object(elts, onode, snode, pnode, "@n");
 
 	free(snode);
 	free(pnode);
