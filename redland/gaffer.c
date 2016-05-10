@@ -126,17 +126,19 @@ librdf_storage_gaffer_init(librdf_storage* storage, const char *name,
 	return 1;
     }
 
-    context->comms = gaffer_connect("http://localhost:8080/");
-    if (context->comms == 0) {
-	librdf_free_hash(options);
-	return 1;
-    }
-
     librdf_storage_set_instance(storage, context);
   
     context->storage = storage;
 
     context->name_len = strlen(name);
+
+    int append_slash = 0;
+
+    if (name[strlen(name)-1] != '/') {
+      append_slash = 1;
+      context->name_len++;
+    }
+
     name_copy = LIBRDF_MALLOC(char*, context->name_len + 1);
     if(!name_copy) {
 	if(options)
@@ -144,15 +146,24 @@ librdf_storage_gaffer_init(librdf_storage* storage, const char *name,
 	return 1;
     }
 
-    strncpy(name_copy, name, context->name_len + 1);
+    strcpy(name_copy, name);
+    if (append_slash) strcat(name_copy, "/");
     context->name = name_copy;
-  
-    if(librdf_hash_get_as_boolean(options, "new")>0)
-	context->is_new = 1; /* default is NOT NEW */
+
+    fprintf(stderr, "Name: %s\n", context->name);
+
+    // Add options here.
 
     /* no more options, might as well free them now */
     if(options)
 	librdf_free_hash(options);
+
+    context->comms = gaffer_connect(context->name);
+    if (context->comms == 0) {
+	free(context->name);
+	free(context);
+	return 1;
+    }
 
     return 0;
 }

@@ -119,6 +119,8 @@ int gaffer_http_get(gaffer_comms* gc, const char* url, http_dload_buffer* buffer
 
     sprintf(url2, "%s%s", gc->url, url);
 
+    fprintf(stderr, "URL: %s\n", url2);
+
     curl_easy_setopt(gc->curl, CURLOPT_URL, url2);
     curl_easy_setopt(gc->curl, CURLOPT_WRITEFUNCTION, &http_dload_callback);
     curl_easy_setopt(gc->curl, CURLOPT_WRITEDATA, (void*) buffer);
