@@ -96,7 +96,9 @@ The Gaffer code is Java code.  You know if there's a problem, because you get a 
 ### Compiling the code
 
 This is in the `redland` directory.   Once Redland is installed, you should be able to compile the code by typing:
-```make```
+```
+make
+```
 from the `redland` directory.
 
 This compiles a set of things:
