@@ -148,11 +148,20 @@ rdfproc -s gaffer http://localhost:8080/ query sparql - 'SELECT ?a WHERE { <http
 Redland has a set of language bindings, [including the Python binding](http://librdf.org/docs/pydoc/RDF.html).  This is contained in the Fedora `python-librdf` package.
 
 ```python
+
+# Load RDF module
+import RDF
+
 # Add a statement
 node1=RDF.Node(uri_string="http://ex.org/#lion")
 node2=RDF.Node(uri_string="http://ex.org/#name")
 node3=RDF.Node(literal="Lion")
 statement=RDF.Statement(node1, node2, node3)
+
+storage=RDF.Storage(storage_name="gaffer", name="http://localhost:8080",
+        options_string="")
+model=RDF.Model(storage)
+
 model.add_statement(statement)
 
 # Match on partial statement
@@ -199,7 +208,10 @@ java GafferEntryPoint
 ```
 Now, to load the Cornwall data set...
 ```
+# Convert n-triples to RDF/XML
 rapper -o rdfxml -i ntriples cornwall.n > cornwall.rdf
+
+# Load the data
 rdfproc -s gaffer http://localhost:8080/ parse cornwall.rdf
 ```
 Dump the data set to check it's there...
@@ -236,8 +248,8 @@ representing the Fowey resource.  To navigate press the small circles at
 the edge of the bigger circles.  See what you can find!
 
 The dataset includes geo information and links to photos on wikipedia,
-which lodlive lets you see.  I'm sure you can work it out.
-
+which lodlive lets you see.  I'm sure you can work it out.  Might help
+you plan your next holiday :).
 
 ![screenshot](screenshot.png "screenshot")
 
