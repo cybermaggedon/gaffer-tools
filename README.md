@@ -143,11 +143,6 @@ A more complex query:
 rdfproc -s gaffer http://localhost:8080/ query sparql - 'SELECT ?a WHERE { <http://gaffer.test/number#3>  <http://gaffer.test/number#is_before> ?b . ?b <http://gaffer.test/number#is_before> ?a . }'
 ```
 
-If you have some RDF lying around, you can load it into the graph:
-```
-rdfproc -n -s gaffer localhost parse my_data.rdf
-```
-
 ### Redland Python API
 
 Redland has a set of language bindings, [including the Python binding](http://librdf.org/docs/pydoc/RDF.html).  This is contained in the Fedora `python-librdf` package.
@@ -190,3 +185,59 @@ Redland's `roqet` utility knows how to query SPARQL. Example usage:
 ```
 roqet -p http://localhost:8081/sparql -e 'SELECT ?a ?b ?c WHERE { ?a ?b ?c . }'
 ```
+
+## Loading some real data
+
+In the gaffer-tools source is a data set I created from data on Wikipedia
+and Cornwall County Council site: `cornwall.n`.
+
+Before loading it into Gaffer, now would be a good time to clear out the
+database, the easiest way to do that is to stop the GafferEntryPoint
+process.  Ctrl-C, and restart:
+```
+java GafferEntryPoint
+```
+Now, to load the Cornwall data set...
+```
+rapper -o rdfxml -i ntriples cornwall.n > cornwall.rdf
+rdfproc -s gaffer http://localhost:8080/ parse cornwall.rdf
+```
+Dump the data set to check it's there...
+```
+rdfproc -s gaffer http://localhost:8080/ print
+```
+And run a SPARQL query for the fun of it...
+```
+roqet -p http://localhost:8081/sparql -e '
+  SELECT ?b ?c
+  WHERE { <http://gaffer.test/cornwall/#Fowey> ?b ?c . }'
+```
+
+## Visualising the data
+
+With a SPARQL endpoint running, one easy way to get started with the data
+is to run the excellent LodLive visualisation tool.  I've bundled a copy
+of LodLive in the gaffer-tools source configured to work with the SPARQL
+endpoint you have running.  To use, just point your browser at open one of the
+`app*.html` files in the `lodlive` directory. e.g. `app_en.html`.
+
+In Firefox, you press Ctrl-O to get the Open File dialogue, then just navigate
+to the directory and open the file.
+
+You get a screen with two rows of boxes.  The second box right in the bottom
+right is where it all happens.
+
+The RESOURCE box is a drop-down.  You can select one of the examples, or search.
+To search, select find resources.  From the CHOOSE A CLASS drop-down select
+`gaffer.test/#town`.  Put `Fowey` in as a keyword, and press search.
+If it all works, `http://gaffer.test/cornwall/#fowey` appears in the final box.
+Press `start` to go visualising.  You see a big circle with "Fowey" in it
+representing the Fowey resource.  To navigate press the small circles at
+the edge of the bigger circles.  See what you can find!
+
+The dataset includes geo information and links to photos on wikipedia,
+which lodlive lets you see.  I'm sure you can work it out.
+
+
+![screenshot](screenshot.png "screenshot")
+

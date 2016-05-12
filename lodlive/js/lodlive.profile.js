@@ -14,11 +14,11 @@ $.jStorage.set('profile', {
 			/*change this*/
 			endpoint : 'http://localhost:8081/sparql',
 			examples : [{
-				label : 'test 1',
-				uri : 'http://mysite.com/aaa'
+				label : 'Fowey',
+				uri : 'http://gaffer.test/cornwall/#Fowey'
 			}, {
-				label : 'test 2',
-				uri : 'http://your.com/bbbb'
+				label : 'Cornwall',
+				uri : 'http://gaffer.test/cornwall'
 			}]
 		}
 	},
