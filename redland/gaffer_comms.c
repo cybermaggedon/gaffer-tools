@@ -370,6 +370,7 @@ void add_edge_object(json_object* elts, const char* edge,
 int gaffer_add(gaffer_comms* gc,
 	       const char* s, const char* p, const char* o)
 {
+    
     char* snode = (char*) malloc(strlen(s) + 3);
     sprintf(snode, "n:%s", s);
     

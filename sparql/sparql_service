@@ -8,7 +8,7 @@ import urlparse
 import xml.etree.ElementTree as ElementTree
 import sys
 
-storage = RDF.Storage(storage_name="gaffer", name="localhost",
+storage = RDF.Storage(storage_name="gaffer", name="http://localhost:8080",
                       options_string="")
 
 model = RDF.Model(storage)
@@ -27,15 +27,30 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_sparql(s):
 
         url = urlparse.urlparse(s.path)
-        query = urlparse.parse_qs(url.query)["query"][0]
+        components = urlparse.parse_qs(url.query)
+        print components
+        
+        query = components["query"][0]
 
         print "Received SPARQL query:", query
 
         query = RDF.SPARQLQuery(query)
-
         results = model.execute(query)
 
-        body = str(results)
+        if components.has_key("output"):
+            if components["output"][0] == "json":
+                body = results.to_string(format_uri="http://www.w3.org/TR/rdf-sparql-json-res/")
+            else:
+                body = str(results)
+        else:
+            body = str(results)
+
+        body = body.encode('utf8')
+
+        if components.has_key("callback"):
+            body = components["callback"][0] + "(" + body + ")"
+
+        print body
 
         s.send_response(200)
         s.send_header("Content-type", "text/plain")
@@ -44,7 +59,19 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 	s.wfile.write(body)
 
+    def do_POST(s):
+
+        print s.path
+        body = "Not found"
+
+        s.send_response(404)
+        s.send_header("Content-type", "text/plain")
+	s.send_header("Content-length", len(body))
+	s.end_headers()
+
     def do_GET(s):
+
+        print s.path
 
         if s.path.startswith("/sparql?"):
             s.do_sparql()

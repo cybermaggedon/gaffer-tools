@@ -47,10 +47,6 @@
 
 #include <gaffer_comms.h>
 
-static const char* const gaffer_synchronous_flags[4] = {
-    "off", "normal", "full", NULL
-};
-
 typedef struct
 {
     librdf_storage *storage;

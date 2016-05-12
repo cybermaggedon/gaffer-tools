@@ -23,7 +23,7 @@ int gaffer_test(gaffer_comms*);
 int gaffer_add(gaffer_comms* gc,
 	       const char* s, const char* p, const char* o);
 
-#define GAFFER_BATCH_SIZE 100
+#define GAFFER_BATCH_SIZE 500
 
 int gaffer_add_batch(gaffer_comms* gcm,
 		     char* batch[GAFFER_BATCH_SIZE][3], int rows, int columns);
