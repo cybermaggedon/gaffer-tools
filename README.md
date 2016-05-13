@@ -7,7 +7,8 @@ with the Gaffer graph database.
 ## Compiling Gaffer
 
 This is covered in
-[Gaffer's Getting Started Guide](https://github.com/GovernmentCommunicationsHeadquarters/Gaffer/wiki/Getting-Started).  But basically, download the source and run:
+[Gaffer's Getting Started Guide](https://github.com/GovernmentCommunicationsHeadquarters/Gaffer/wiki/Getting-Started).  But basically, download the source,
+check out the `develop` branch and run:
 
 ```
 mvn clean package
@@ -82,7 +83,9 @@ The Gaffer code is Java code.  You know if there's a problem, because you get a 
 
 ### Install Redland
 
-[Redland](http://librdf.org) is a set of APIs and utilities which support storage of RDF.  You'll need to install Redland and the development libraries.  On Fedora, you need to install this set of packages:
+[Redland](http://librdf.org) is a set of APIs and utilities which support storage of RDF.  You'll need to install Redland and the development libraries, plus dependencies (curl, json-c, sqlite).
+
+On Fedora, you need to install at least this set of packages:
 * `redland`
 * `redland-devel`
 * `raptor2`
@@ -92,6 +95,11 @@ The Gaffer code is Java code.  You know if there's a problem, because you get a 
 * `librdf`
 * `librdf-devel`
 * `python-librdf`
+* `curl-devel`
+* `json-c-devel`
+* `sqlite-devel`
+* `gcc-c`
+* `gcc-c++`
 
 ### Compiling the code
 

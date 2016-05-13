@@ -7,7 +7,7 @@ SQLITE_FLAGS=-DSTORE=\"sqlite\" -DSTORE_NAME=\"STORE.db\"
 
 GAFFER_FLAGS=-DSTORE=\"gaffer\" -DSTORE_NAME=\"http://localhost:8080/\"
 
-all: test-sqlite test-gaffer librdf_storage_gaffer.so bulk_load
+all: test-sqlite test-gaffer librdf_storage_gaffer.so
 
 test-sqlite: test-sqlite.o
 	${CXX} ${CXXFLAGS} test-sqlite.o -o $@ ${LIBS}
@@ -20,9 +20,6 @@ test-sqlite.o: test.C
 
 test-gaffer.o: test.C
 	${CXX} ${CXXFLAGS} -c $< -o $@ ${GAFFER_FLAGS}
-
-bulk_load: bulk_load.o
-	${CXX} ${CXXFLAGS} bulk_load.o -o $@ ${LIBS}
 
 test-sqlite.o test-gaffer.o gaffer.o gaffer_comms.o: gaffer_comms.h
 
