@@ -95,7 +95,7 @@
 <http://gaffer.test/cornwall/#Hayle> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.416"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Hayle> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.183"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Hayle> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/1646_-_Hayle_Estuary_from_the_electric_works.jpg/800px-1646_-_Hayle_Estuary_from_the_electric_works.jpg>
-<http://gaffer.test/cornwall/#Hayle> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Hayle>
+<http://gaffer.test/cornwall/#Hayle> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Hayle>
 
 <http://gaffer.test/cornwall/#Helston> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Helston> <http://purl.org/dc/elements/1.1/title> "Helston"
@@ -105,7 +105,7 @@
 <http://gaffer.test/cornwall/#Helston> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.270"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Helston> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.100"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Helston> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/3/3e/Coinagehall_Street_Helston_-_geograph.org.uk_-_1300488.jpg>
-<http://gaffer.test/cornwall/#Helston> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Helston>
+<http://gaffer.test/cornwall/#Helston> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Helston>
 
 <http://gaffer.test/cornwall/#Illogan> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Illogan> <http://purl.org/dc/elements/1.1/title> "Illogan"
@@ -115,7 +115,7 @@
 <http://gaffer.test/cornwall/#Illogan> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.268"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Illogan> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.250"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Illogan> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/b/b4/St_Illogan_Church_Bell_Tower_-_geograph.org.uk_-_188951.jpg>
-<http://gaffer.test/cornwall/#Illogan> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Illogan>
+<http://gaffer.test/cornwall/#Illogan> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Illogan>
 
 <http://gaffer.test/cornwall/#Launceston> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Launceston> <http://purl.org/dc/elements/1.1/title> "Launceston"
@@ -125,7 +125,7 @@
 <http://gaffer.test/cornwall/#Launceston> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.354"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Launceston> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.635"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Launceston> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/e/e8/Town_Square_-_geograph.org.uk_-_1286355.jpg>
-<http://gaffer.test/cornwall/#Launceston> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Launceston,_Cornwall>
+<http://gaffer.test/cornwall/#Launceston> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Launceston,_Cornwall>
 
 <http://gaffer.test/cornwall/#Liskeard> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Liskeard> <http://purl.org/dc/elements/1.1/title> "Liskeard"
@@ -135,7 +135,7 @@
 <http://gaffer.test/cornwall/#Liskeard> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.465"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Liskeard> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.454"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Liskeard> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/The_Guildhall%2C_Market_Street%2C_Liskeard_-_geograph.org.uk_-_666030.jpg/411px-The_Guildhall%2C_Market_Street%2C_Liskeard_-_geograph.org.uk_-_666030.jpg>
-<http://gaffer.test/cornwall/#Liskeard> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Liskeard>
+<http://gaffer.test/cornwall/#Liskeard> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Liskeard>
 
 <http://gaffer.test/cornwall/#Looe> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Looe> <http://purl.org/dc/elements/1.1/title> "Looe"
@@ -145,7 +145,7 @@
 <http://gaffer.test/cornwall/#Looe> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.454"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Looe> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.354"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Looe> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/RiverLooe.jpg/800px-RiverLooe.jpg>
-<http://gaffer.test/cornwall/#Looe> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Looe>
+<http://gaffer.test/cornwall/#Looe> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Looe>
 
 <http://gaffer.test/cornwall/#Lostwithiel> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Lostwithiel> <http://purl.org/dc/elements/1.1/title> "Lostwithiel"
@@ -155,7 +155,7 @@
 <http://gaffer.test/cornwall/#Lostwithiel> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.700"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Lostwithiel> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.407"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Lostwithiel> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Lostwithiel_bridge_river_Fowey_Cornwall.jpg/800px-Lostwithiel_bridge_river_Fowey_Cornwall.jpg>
-<http://gaffer.test/cornwall/#Lostwithiel> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Lostwithiel>
+<http://gaffer.test/cornwall/#Lostwithiel> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Lostwithiel>
 
 <http://gaffer.test/cornwall/#Millbrook> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Millbrook> <http://purl.org/dc/elements/1.1/title> "Millbrook"
@@ -165,7 +165,7 @@
 <http://gaffer.test/cornwall/#Millbrook> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.217"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Millbrook> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.348"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Millbrook> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Millbrook.jpg/800px-Millbrook.jpg>
-<http://gaffer.test/cornwall/#Millbrook> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Millbrook,_Cornwall>
+<http://gaffer.test/cornwall/#Millbrook> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Millbrook,_Cornwall>
 
 <http://gaffer.test/cornwall/#Newlyn> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Newlyn> <http://purl.org/dc/elements/1.1/title> "Newlyn"
@@ -175,7 +175,7 @@
 <http://gaffer.test/cornwall/#Newlyn> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.553"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Newlyn> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.101"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Newlyn> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/9/91/View_across_Newlyn_Harbour_-_geograph.org.uk_-_1579992.jpg>
-<http://gaffer.test/cornwall/#Newlyn> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Newlyn>
+<http://gaffer.test/cornwall/#Newlyn> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Newlyn>
 
 <http://gaffer.test/cornwall/#Newquay> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Newquay> <http://purl.org/dc/elements/1.1/title> "Newquay"
@@ -185,7 +185,7 @@
 <http://gaffer.test/cornwall/#Newquay> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.076"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Newquay> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.412"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Newquay> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Newquayhill.jpg/800px-Newquayhill.jpg>
-<http://gaffer.test/cornwall/#Newquay> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Newquay>
+<http://gaffer.test/cornwall/#Newquay> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Newquay>
 
 <http://gaffer.test/cornwall/#Padstow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Padstow> <http://purl.org/dc/elements/1.1/title> "Padstow"
@@ -195,7 +195,7 @@
 <http://gaffer.test/cornwall/#Padstow> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.938"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Padstow> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.538"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Padstow> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Padstow_1.jpg/794px-Padstow_1.jpg>
-<http://gaffer.test/cornwall/#Padstow> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Padstow>
+<http://gaffer.test/cornwall/#Padstow> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Padstow>
 
 <http://gaffer.test/cornwall/#Penryn> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Penryn> <http://purl.org/dc/elements/1.1/title> "Penryn"
@@ -205,7 +205,7 @@
 <http://gaffer.test/cornwall/#Penryn> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.107"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Penryn> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.169"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Penryn> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/a/a9/Geograph-2015028-by-David-Dixon.jpg>
-<http://gaffer.test/cornwall/#Penryn> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Penryn,_Cornwall>
+<http://gaffer.test/cornwall/#Penryn> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Penryn,_Cornwall>
 
 <http://gaffer.test/cornwall/#Penzance> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Penzance> <http://purl.org/dc/elements/1.1/title> "Penzance"
@@ -215,7 +215,7 @@
 <http://gaffer.test/cornwall/#Penzance> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.537"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Penzance> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.119"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Penzance> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/PZHARBOURPANORAMA.jpg/800px-PZHARBOURPANORAMA.jpg>
-<http://gaffer.test/cornwall/#Penzance> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Penzance>
+<http://gaffer.test/cornwall/#Penzance> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Penzance>
 
 <http://gaffer.test/cornwall/#Perranporth> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Perranporth> <http://purl.org/dc/elements/1.1/title> "Perranporth"
@@ -225,7 +225,7 @@
 <http://gaffer.test/cornwall/#Perranporth> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.155"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Perranporth> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.344"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Perranporth> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/6/66/Droskyn_Point_-_geograph.org.uk_-_23562.jpg>
-<http://gaffer.test/cornwall/#Perranporth> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Perranporth>
+<http://gaffer.test/cornwall/#Perranporth> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Perranporth>
 
 <http://gaffer.test/cornwall/#Pool> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Pool> <http://purl.org/dc/elements/1.1/title> "Pool"
@@ -235,7 +235,7 @@
 <http://gaffer.test/cornwall/#Pool> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.266"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Pool> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.228"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Pool> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Two_Engine_Houses_of_the_Grenville_United_Mine_-_geograph.org.uk_-_176792.jpg/555px-Two_Engine_Houses_of_the_Grenville_United_Mine_-_geograph.org.uk_-_176792.jpg>
-<http://gaffer.test/cornwall/#Pool> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Pool,_Cornwall>
+<http://gaffer.test/cornwall/#Pool> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Pool,_Cornwall>
 
 <http://gaffer.test/cornwall/#Porthleven> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Porthleven> <http://purl.org/dc/elements/1.1/title> "Porthleven"
@@ -245,7 +245,7 @@
 <http://gaffer.test/cornwall/#Porthleven> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.315"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Porthleven> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.084"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Porthleven> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/b/b3/The_Institute_and_Harbour_Road%2C_Porthleven_-_geograph.org.uk_-_230482.jpg>
-<http://gaffer.test/cornwall/#Porthleven> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Porthleven>
+<http://gaffer.test/cornwall/#Porthleven> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Porthleven>
 
 <http://gaffer.test/cornwall/#Redruth> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Redruth> <http://purl.org/dc/elements/1.1/title> "Redruth"
@@ -255,7 +255,7 @@
 <http://gaffer.test/cornwall/#Redruth> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.224"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Redruth> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.233"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Redruth> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/9/9c/Redruth.jpg>
-<http://gaffer.test/cornwall/#Redruth> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Redruth>
+<http://gaffer.test/cornwall/#Redruth> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Redruth>
 
 <http://gaffer.test/cornwall/#Saltash> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Saltash> <http://purl.org/dc/elements/1.1/title> "Saltash"
@@ -265,7 +265,7 @@
 <http://gaffer.test/cornwall/#Saltash> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.212"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Saltash> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.408"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Saltash> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/en/thumb/3/36/Bridges%2C_boats_and_trains_at_Saltash..jpg/800px-Bridges%2C_boats_and_trains_at_Saltash..jpg>
-<http://gaffer.test/cornwall/#Saltash> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Saltash>
+<http://gaffer.test/cornwall/#Saltash> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Saltash>
 
 <http://gaffer.test/cornwall/#StAgnes> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#StAgnes> <http://purl.org/dc/elements/1.1/title> "St. Agnes"
@@ -275,7 +275,7 @@
 <http://gaffer.test/cornwall/#StAgnes> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.204"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#StAgnes> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.312"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#StAgnes> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/d/d8/Churchtown%2C_St_Agnes_-_geograph.org.uk_-_367669.jpg>
-<http://gaffer.test/cornwall/#StAgnes> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#St_Agnes,_Cornwall>
+<http://gaffer.test/cornwall/#StAgnes> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/St_Agnes,_Cornwall>
 
 <http://gaffer.test/cornwall/#StAustell> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#StAustell> <http://purl.org/dc/elements/1.1/title> "St. Austell"
@@ -285,7 +285,7 @@
 <http://gaffer.test/cornwall/#StAustell> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.795"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#StAustell> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.338"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#StAustell> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/0/04/High_Cross_Street%2C_St_Austell_-_geograph.org.uk_-_1313370.jpg>
-<http://gaffer.test/cornwall/#StAustell> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#St_Austell>
+<http://gaffer.test/cornwall/#StAustell> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/St_Austell>
 
 <http://gaffer.test/cornwall/#StBlazey> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#StBlazey> <http://purl.org/dc/elements/1.1/title> "St. Blazey"
@@ -295,7 +295,7 @@
 <http://gaffer.test/cornwall/#StBlazey> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.716"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#StBlazey> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.361"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#StBlazey> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/2/23/Station_Road%2C_St._Blazey%2C_Cornwall_-_geograph.org.uk_-_1249843.jpg>
-<http://gaffer.test/cornwall/#StBlazey> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#St_Blazey>
+<http://gaffer.test/cornwall/#StBlazey> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/St_Blazey>
 
 <http://gaffer.test/cornwall/#StColumbMajor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#StColumbMajor> <http://purl.org/dc/elements/1.1/title> "St. Columb Major"
@@ -305,7 +305,7 @@
 <http://gaffer.test/cornwall/#StColumbMajor> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.940"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#StColumbMajor> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.432"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#StColumbMajor> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/d/d8/Columba3.jpg>
-<http://gaffer.test/cornwall/#StColumbMajor> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#St_Columb_Major>
+<http://gaffer.test/cornwall/#StColumbMajor> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/St_Columb_Major>
 
 <http://gaffer.test/cornwall/#StIves> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#StIves> <http://purl.org/dc/elements/1.1/title> "St. Ives"
@@ -315,7 +315,7 @@
 <http://gaffer.test/cornwall/#StIves> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.480"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#StIves> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.211"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#StIves> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/5/54/Stives1.jpg>
-<http://gaffer.test/cornwall/#StIves> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#St_Ives,_Cornwall>
+<http://gaffer.test/cornwall/#StIves> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/St_Ives,_Cornwall>
 
 <http://gaffer.test/cornwall/#Torpoint> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Torpoint> <http://purl.org/dc/elements/1.1/title> "Torpoint"
@@ -325,7 +325,7 @@
 <http://gaffer.test/cornwall/#Torpoint> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.205"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Torpoint> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.376"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Torpoint> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/6/61/Torpoint_War_Memorial_-_geograph.org.uk_-_72337.jpg>
-<http://gaffer.test/cornwall/#Torpoint> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Torpoint>
+<http://gaffer.test/cornwall/#Torpoint> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Torpoint>
 
 <http://gaffer.test/cornwall/#Truro> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Truro> <http://purl.org/dc/elements/1.1/title> "Truro"
@@ -335,7 +335,7 @@
 <http://gaffer.test/cornwall/#Truro> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.051"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Truro> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.260"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Truro> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/d/d7/Truro_rooftops.jpg>
-<http://gaffer.test/cornwall/#Truro> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Truro>
+<http://gaffer.test/cornwall/#Truro> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Truro>
 
 <http://gaffer.test/cornwall/#TywardreathAndPar> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#TywardreathAndPar> <http://purl.org/dc/elements/1.1/title> "Tywardreath and Par"
@@ -346,8 +346,8 @@
 <http://gaffer.test/cornwall/#TywardreathAndPar> <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Par>
 <http://gaffer.test/cornwall/#TywardreathAndPar> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.694"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#TywardreathAndPar> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.357"^^<http://www.w3.org/2001/XMLSchema#float>
-<http://gaffer.test/cornwall/#TywardreathAndPar> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/1/11/Par_Beach_-_geograph.org.uk_-_5<http://gaffer.test/cornwall/#TywardreathAndPar> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Tywardreath_and_Par>
-58792.jpg>
+<http://gaffer.test/cornwall/#TywardreathAndPar> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/1/11/Par_Beach_-_geograph.org.uk_-_558792.jpg>
+<http://gaffer.test/cornwall/#TywardreathAndPar> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Tywardreath_and_Par>
 
 <http://gaffer.test/cornwall/#Wadebridge> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://gaffer.test/#town>
 <http://gaffer.test/cornwall/#Wadebridge> <http://purl.org/dc/elements/1.1/title> "Wadebridge"
@@ -357,6 +357,6 @@
 <http://gaffer.test/cornwall/#Wadebridge> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.885"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Wadebridge> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.518"^^<http://www.w3.org/2001/XMLSchema#float>
 <http://gaffer.test/cornwall/#Wadebridge> <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Wadebridge_Clock_tower.jpg/800px-Wadebridge_Clock_tower.jpg>
-<http://gaffer.test/cornwall/#Wadebridge> <http://www.w3.org/2002/07/owl#sameAs> <https://dbpedia.org/resource/#Wadebridge>
+<http://gaffer.test/cornwall/#Wadebridge> <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Wadebridge>
 
 

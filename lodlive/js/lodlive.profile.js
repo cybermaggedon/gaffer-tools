@@ -5,6 +5,39 @@
 $.jStorage.set('profile', {
 	// parametri di connessione agli endpoint
     'connection' : {
+		'http://dbpedia.org' : {
+			description : {
+				it : 'DBpedia is a community effort to extract structured information from Wikipedia and to make this information available on the Web. DBpedia allows you to ask sophisticated queries against Wikipedia, and to link other data sets on the Web to Wikipedia data.',
+				en : 'DBpedia is a community effort to extract structured information from Wikipedia and to make this information available on the Web. DBpedia allows you to ask sophisticated queries against Wikipedia, and to link other data sets on the Web to Wikipedia data.'
+			},
+			sparql : {
+				allClasses : 'SELECT DISTINCT ?object  WHERE {[] a ?object} ORDER BY ?object  LIMIT 50  ',
+				findSubject : 'SELECT DISTINCT ?subject WHERE { {?subject a <{CLASS}>;<http://purl.org/dc/elements/1.1/title> ?object. FILTER(regex(str(?object),\'{VALUE}\',\'i\'))} UNION {?subject a <{CLASS}>;<http://www.w3.org/2000/01/rdf-schema#label> ?object. FILTER(regex(str(?object),\'{VALUE}\',\'i\'))} UNION {?subject a <{CLASS}>;<http://www.w3.org/2004/02/skos/core#prefLabel> ?object. FILTER(regex(str(?object),\'{VALUE}\',\'i\'))} } LIMIT 1',
+				documentUri : 'SELECT DISTINCT * WHERE {<{URI}> ?property ?object.FILTER ((( isIRI(?object) && ?property != <http://xmlns.com/foaf/0.1/depiction> )|| ?property = <http://www.w3.org/2000/01/rdf-schema#label>  || ?property = <http://www.georss.org/georss/point> || ?property = <http://xmlns.com/foaf/0.1/surname> || ?property = <http://xmlns.com/foaf/0.1/name> || ?property = <http://purl.org/dc/elements/1.1/title>))}  ORDER BY ?property',
+				document : 'SELECT DISTINCT *  WHERE  {{<{URI}> ?property ?object. FILTER(!isLiteral(?object))} UNION 	 {<{URI}> ?property 	 ?object.FILTER(isLiteral(?object)).FILTER(lang(?object) ="it")} UNION 	 {<{URI}> ?property 	 ?object.FILTER(isLiteral(?object)).FILTER(lang(?object) ="en")}}  ORDER BY ?property',
+				bnode : 'SELECT DISTINCT *  WHERE {<{URI}> ?property ?object}',
+				inverse : 'SELECT DISTINCT * WHERE {?object ?property <{URI}> FILTER(REGEX(STR(?object),\'//dbpedia.org\'))} LIMIT 100',
+				inverseSameAs : 'SELECT DISTINCT * WHERE {?object <http://www.w3.org/2002/07/owl#sameAs> <{URI}> FILTER(REGEX(STR(?object),\'//dbpedia.org\'))}'
+			},
+			useForInverseSameAs : true,
+			endpoint : 'http://dbpedia.org/sparql',
+			examples : [{
+				label : 'Giulio Andreotti (foaf:Person)',
+				uri : 'http://dbpedia.org/resource/Giulio_Andreotti'
+			}, {
+				label : 'Leonardo Sciascia (foaf:Person)',
+				uri : 'http://dbpedia.org/resource/Leonardo_Sciascia'
+			}, {
+				label : 'Rome',
+				uri : 'http://dbpedia.org/resource/Rome'
+			}, {
+				label : 'Wikipedia',
+				uri : 'http://dbpedia.org/resource/Wikipedia'
+			}, {
+				label : 'Linked data',
+				uri : 'http://dbpedia.org/resource/Linked_data'
+			}]
+		},
 
 		/*matching all the requested URIs*/
 		'http://gaffer.test' : {
