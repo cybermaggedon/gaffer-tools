@@ -4,9 +4,10 @@
 
 $.jStorage.set('profile', {
 	// parametri di connessione agli endpoint
-	'connection' : {
+    'connection' : {
+
 		/*matching all the requested URIs*/
-		'http://' : {
+		'http://gaffer.test' : {
 			description : {
 				en : 'just a test'
 			},
@@ -45,7 +46,7 @@ $.jStorage.set('profile', {
 			inverse : 'SELECT DISTINCT * WHERE {?object ?property <{URI}>.} LIMIT 100',
 			inverseSameAs : 'SELECT DISTINCT * WHERE {{?object <http://www.w3.org/2002/07/owl#sameAs> <{URI}> } UNION { ?object <http://www.w3.org/2004/02/skos/core#exactMatch> <{URI}>}}'
 		},
-		endpoint : 'http://labs.regesta.com/resourceProxy/',
+                endpoint : 'http://labs.regesta.com/resourceProxy/',
 		document : {
 			className : 'standard',
 			titleProperties : ['http://dati.senato.it/osr/titolo', 'http://www.w3.org/2004/02/skos/core#notation', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value', 'http://www.geonames.org/ontology#name', 'http://purl.org/dc/elements/1.1/title', 'http://purl.org/dc/terms/title', 'http://www.w3.org/2000/01/rdf-schema#label', 'http://www.w3.org/2004/02/skos/core#prefLabel', 'http://logd.tw.rpi.edu/source/visualizing-org/dataset/2010-global-agenda-council-interlinkage-survey/vocab/enhancement/1/how_councils_interlink', 'http://rdf.freebase.com/ns/type.object.name', 'http://spcdata.digitpa.gov.it/nome_cognome', 'http://xmlns.com/foaf/0.1/firstName', 'http://xmlns.com/foaf/0.1/lastName', 'http://xmlns.com/foaf/0.1/surname', 'http://xmlns.com/foaf/0.1/name', 'http://purl.org/dc/terms/description', 'http://www.geonames.org/ontology/officialName']
