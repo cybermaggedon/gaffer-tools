@@ -236,8 +236,8 @@ endpoint you have running.  To use, just point your browser at open one of the
 In Firefox, you press Ctrl-O to get the Open File dialogue, then just navigate
 to the directory and open the file.
 
-You get a screen with two rows of boxes.  The second box right in the bottom
-right is where it all happens.
+You get a screen with two rows of boxes.  The box at the bottom labelled
+gaffer.test is where you go next.
 
 The RESOURCE box is a drop-down.  You can select one of the examples, or search.
 To search, select find resources.  From the CHOOSE A CLASS drop-down select
@@ -247,9 +247,12 @@ Press `start` to go visualising.  You see a big circle with "Fowey" in it
 representing the Fowey resource.  To navigate press the small circles at
 the edge of the bigger circles.  See what you can find!
 
-The dataset includes geo information and links to photos on wikipedia,
-which lodlive lets you see.  I'm sure you can work it out.  Might help
-you plan your next holiday :).
+The dataset includes geo information and links to photos on wikipedia, which
+lodlive lets you see.  Where you see small "s" circles on the screen, these
+are `sameAs` relationships which allow you to navigate between the same
+entity The dataset I have includes `sameAs` links to `dbpedia.org`
+resources, so you can you navigate into all sorts of interesting topics.
+I'm sure you can work it out.  Might help you plan your next holiday :).
 
 ![screenshot](screenshot.png "screenshot")
 
