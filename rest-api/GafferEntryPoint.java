@@ -5,6 +5,7 @@ import gaffer.jsonserialisation.JSONSerialiser;
 import gaffer.exception.SerialisationException;
 import gaffer.data.element.Edge;
 import gaffer.operation.impl.add.AddElements;
+import gaffer.user.User;
 
 import gaffer.graph.Graph;
 import gaffer.operation.OperationException;
@@ -17,6 +18,7 @@ import java.io.IOException;
 class GafferEntryPoint {
 
     private Graph graph;
+    private User user;
 
     public GafferEntryPoint() throws IOException {
 
@@ -31,6 +33,8 @@ class GafferEntryPoint {
 		.addSchema(schema)
 		.storeProperties(storeProperties)
 		.build();
+
+	    user = new User("GafferEntryPoint");
 
 	} catch (IOException e) {
 	    System.out.println("Exception " + e);
@@ -52,7 +56,7 @@ class GafferEntryPoint {
 	ae = (AddElements) j.deserialise(json.getBytes(),
 					 AddElements.class);
 
-	graph.execute(ae);
+	graph.execute(ae, user);
 
     }
 
@@ -66,7 +70,7 @@ class GafferEntryPoint {
 	o = (GetRelatedEdges) j.deserialise(json.getBytes(),
 					    GetRelatedEdges.class);
 
-	Iterable<Edge> edges = graph.execute(o);
+	Iterable<Edge> edges = graph.execute(o, user);
 
 	byte[] result = j.serialise(edges);
 
@@ -75,7 +79,7 @@ class GafferEntryPoint {
     }
 
     public Object execute(OperationChain<?> o) throws OperationException {
-	return graph.execute(o);
+	return graph.execute(o, user);
     }
 
     public String doOperation(String json)

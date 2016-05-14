@@ -13,7 +13,7 @@ check out the `develop` branch and run:
 ```
 mvn clean package
 ```
-I have this working with git revision `9a9dc1b2d83ae835019a069d3e6abf8d8e511f4f`.
+I have this working with git revision `e65b146cf38026ebe66f48444ea716ba6b137fd3`.
 
 ## The REST interface
 
