@@ -83,6 +83,11 @@ As we have two types of edge, these will be differentiated:
 
 We have no use for entities - the edges carry all the information we need.
 
+The type of a piece of information is stashed at the front of the name -
+this is done for vertex names and edge names.
+
+Currently we use: s: string, b: blank, u: URI, i: integer, f: float.
+
 Storage request
 ===============
 
@@ -97,23 +102,23 @@ REST interface /graph/doOperation/add/elements
 	{
 	    "class": "gaffer.data.element.Edge",
 	    "properties": {
-		"name": {"r:http://ex.org/#eats": 1},
+		"name": {"r:u:Lhttp://ex.org/#eats": 1},
 		"type": {"@r": 1}
 	    },
 	    "group": "BasicEdge",
-	    "source": "n:http://ex.org/#lion",
-	    "destination": "n:http://ex.org/#zebra",
+	    "source": "n:u:http://ex.org/#lion",
+	    "destination": "n:u:http://ex.org/#zebra",
 	    "directed": true
 	},
 	{
 	    "class": "gaffer.data.element.Edge",
 	    "properties": {
-		"name": {"n:http://ex.org/#zebra": 1},
+		"name": {"n:u:http://ex.org/#zebra": 1},
 		"type": {"@n": 1}
 	    },
 	    "group": "BasicEdge",
-	    "source": "n:http://ex.org/#lion",
-	    "destination": "r:http://ex.org/#eats",
+	    "source": "n:u:http://ex.org/#lion",
+	    "destination": "r:u:http://ex.org/#eats",
 	    "directed": true
 	}
     ]
@@ -190,7 +195,7 @@ REST interface /graph/doOperation/get/edges/related
     "seeds": [
 	{
 	    "gaffer.operation.data.EntitySeed": {
-		"vertex": "n:http://ex.org/#lion"
+		"vertex": "n:u:http://ex.org/#lion"
 	    }
 	}
     ],
@@ -209,7 +214,7 @@ REST interface /graph/doOperation/get/edges/related
     "seeds": [
 	{
 	    "gaffer.operation.data.EntitySeed": {
-		"vertex": "n:http://ex.org/#zebra"
+		"vertex": "n:u:http://ex.org/#zebra"
 	    }
 	}
     ],
@@ -228,7 +233,7 @@ REST interface /graph/doOperation/get/edges/related
     "seeds": [
         {
 	    "gaffer.operation.data.EntitySeed": {
-		"vertex": "r:http://ex.org/#eats"
+		"vertex": "r:u:http://ex.org/#eats"
 	    }
 	}
     ],
@@ -246,8 +251,8 @@ REST interface /graph/doOperation/get/edges/related
     "seeds": [
 	{
 	    "gaffer.operation.data.EdgeSeed": {
-		"source": "n:http://ex.org/#lion",
-		"destination": "n:http://ex.org/#zebra",
+		"source": "n:u:http://ex.org/#lion",
+		"destination": "n:u:http://ex.org/#zebra",
 		"directed": true
 	    }
 	}
@@ -271,7 +276,7 @@ REST interface /graph/doOperation/get/edges/related
 		    {
 			"function": {
 			    "class": "gaffer.function.simple.filter.IsEqual",
-			    "value": "r:http://ex.org/#eats"
+			    "value": "r:u:http://ex.org/#eats"
 			},
 			"selection": [
 			    {
@@ -286,7 +291,7 @@ REST interface /graph/doOperation/get/edges/related
     "seeds": [
 	{
 	    "gaffer.operation.data.EntitySeed": {
-		"vertex": "n:http://ex.org/#zebra"
+		"vertex": "n:u:http://ex.org/#zebra"
 	    }
 	}
     ],
@@ -311,7 +316,7 @@ REST interface /graph/doOperation/get/edges/related
 		    {
 			"function": {
 			    "class": "gaffer.function.simple.filter.IsEqual",
-			    "value": "r:http://ex.org/#eats"
+			    "value": "r:u:http://ex.org/#eats"
 			},
 			"selection": [
 			    {
@@ -325,7 +330,7 @@ REST interface /graph/doOperation/get/edges/related
     },
     "seeds": [
 	"gaffer.operation.data.EntitySeed": {
-	    "vertex": "n:http://ex.org/#lion"
+	    "vertex": "n:u:http://ex.org/#lion"
 	}
     ],
     "includeIncomingOutGoing": "OUTGOING"
@@ -347,7 +352,7 @@ REST interface /graph/doOperation/get/edges/related
 		    {
 			"function": {
 			    "class": "gaffer.function.simple.filter.IsEqual",
-			    "value": "r:http://ex.org/#eats"
+			    "value": "r:u:http://ex.org/#eats"
 			},
 			"selection": [
 			    {
@@ -362,8 +367,8 @@ REST interface /graph/doOperation/get/edges/related
     "seeds": [
 	{
 	    "gaffer.operation.data.EdgeSeed": {
-		"source": "n:http://ex.org/#lion",
-		"destination": "n:http://ex.org/#zebra",
+		"source": "n:u:http://ex.org/#lion",
+		"destination": "n:u:http://ex.org/#zebra",
 		"directed": true
 	    }
 	}

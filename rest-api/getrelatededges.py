@@ -24,7 +24,7 @@ data = """
     "seeds": [
 	{
 	    "gaffer.operation.data.EntitySeed": {
-		"vertex": "n:http://ex.org/#lion"
+		"vertex": "n:u:http://ex.org/#lion"
 	    }
 	}
     ],

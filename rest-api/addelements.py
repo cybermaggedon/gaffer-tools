@@ -8,14 +8,14 @@ data = """
 	    "properties": {
 		"name": {
   		    "gaffer.function.simple.types.FreqMap": {
-                         "r:http://ex.org/#eats": 1,
+                         "r:u:http://ex.org/#eats": 1,
                          "@r": 1
                     } 
                 }
 	    },
 	    "group": "BasicEdge",
-	    "source": "n:http://ex.org/#lion",
-	    "destination": "n:http://ex.org/#zebra",
+	    "source": "n:u:http://ex.org/#lion",
+	    "destination": "n:u:http://ex.org/#zebra",
 	    "directed": true
 	},
 	{
@@ -23,14 +23,14 @@ data = """
 	    "properties": {
 		"name": {
   		    "gaffer.function.simple.types.FreqMap": {
-			"n:http://ex.org/#zebra": 1,
+			"n:u:http://ex.org/#zebra": 1,
 			"@n": 1
 		    }
 		}
 	    },
 	    "group": "BasicEdge",
-	    "source": "n:http://ex.org/#lion",
-	    "destination": "r:http://ex.org/#eats",
+	    "source": "n:u:http://ex.org/#lion",
+	    "destination": "r:u:http://ex.org/#eats",
 	    "directed": true
 	}
     ]

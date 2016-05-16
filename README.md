@@ -70,12 +70,12 @@ There are three Python scripts which test the REST API is working:
 * `python dooperations.py` runs a key range query.  Output should be this:
    
    ```
-   [{"class":"gaffer.data.element.Edge","properties":{"name":{"gaffer.function.simple.types.FreqMap":{"r:http://ex.org/#eats":4,"@r":4}}},"group":"BasicEdge","source":"n:http://ex.org/#lion","destination":"n:http://ex.org/#zebra","directed":true}]
+   [{"class":"gaffer.data.element.Edge","properties":{"name":{"gaffer.function.simple.types.FreqMap":{"r:u:http://ex.org/#eats":4,"@r":4}}},"group":"BasicEdge","source":"n:u:http://ex.org/#lion","destination":"n:u:http://ex.org/#zebra","directed":true}]
    ```
 
 * `python getrelatededges.py` runs a related edge query.  Output should look like this:
    ```
-   [{"class":"gaffer.data.element.Edge","properties":{"name":{"gaffer.function.simple.types.FreqMap":{"r:http://ex.org/#eats":4,"@r":4}}},"group":"BasicEdge","source":"n:http://ex.org/#lion","destination":"n:http://ex.org/#zebra","directed":true}]
+   [{"class":"gaffer.data.element.Edge","properties":{"name":{"gaffer.function.simple.types.FreqMap":{"r:u:http://ex.org/#eats":4,"@r":4}}},"group":"BasicEdge","source":"n:u:http://ex.org/#lion","destination":"n:u:http://ex.org/#zebra","directed":true}]
    ```
 
 The Gaffer code is Java code.  You know if there's a problem, because you get a massive stack trace.
