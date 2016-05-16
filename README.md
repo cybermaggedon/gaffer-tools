@@ -236,6 +236,8 @@ roqet -p http://localhost:8081/sparql -e '
 
 ## Visualising the data
 
+### LodLive
+
 With a SPARQL endpoint running, one easy way to get started with the data
 is to run the excellent LodLive visualisation tool.  I've bundled a copy
 of LodLive in the gaffer-tools source configured to work with the SPARQL
@@ -264,4 +266,23 @@ resources, so you can you navigate into all sorts of interesting topics.
 I'm sure you can work it out.  Might help you plan your next holiday :).
 
 ![screenshot](screenshot.png "screenshot")
+
+LodLive is open source, released under the MIT licence. 
+LodLive development site is [here](http://en.lodlive.it/).
+
+### Sgvizler
+
+Another awesome tool is [Sgvizler](http://mgskjaeveland.github.io/sgvizler/).
+
+Sgvizler integrates SPARQL and Google visualisations, allowing you to easily
+query a SPARQL endpoint and invoke a Google visualisation on the resultant
+data.
+
+I've bundled a copy of Sgvizler, and a sample web page in the git repository.
+To view, point your web-browser at sgvizler/cornwall.html in the source tree.
+You should see a page like the shot below.
+
+![screenshot](screenshot2.png "screenshot")
+
+Sgvizler is open source, released under the MIT licence.
 

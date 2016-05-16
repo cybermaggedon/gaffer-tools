@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>Cornwall visualisation</title>
+    <script type="text/javascript" src="jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="0.6/sgvizler.js"></script>
+    <script>
+      $(document).ready(
+          function (){ sgvizler.containerDrawAll(); }
+      );
+    </script>
+  </head>
+  <body>
+
+    <h1>Cornwall visualisation</h1>
+
+    <h2>Most populous towns - pie</h2>
+
+    <div id="example1"
+         data-sgvizler-endpoint="http://localhost:8081/sparql"
+         data-sgvizler-query="
+             SELECT ?place ?population
+             WHERE {
+                 ?rsrc <http://gaffer.test/#town-population> ?population .
+		 ?rsrc <http://purl.org/dc/elements/1.1/title> ?place .
+             }
+             ORDER BY DESC(?population)
+	     LIMIT 12
+             "
+         data-sgvizler-chart="google.visualization.PieChart"
+         style="width:800px; height:400px;"></div>
+
+    <h2>Most populous towns - tabulation</h2>
+
+    <div id="example2"
+         data-sgvizler-endpoint="http://localhost:8081/sparql"
+         data-sgvizler-query="
+             SELECT ?place ?population
+             WHERE {
+                 ?rsrc <http://gaffer.test/#town-population> ?population .
+		 ?rsrc <http://purl.org/dc/elements/1.1/title> ?place .
+             }
+             ORDER BY DESC(?population)
+	     LIMIT 12
+             "
+         data-sgvizler-chart="google.visualization.Table"
+       style="width:800px; height:400px;"></div>
+
+    <h2>Populous towns</h2>
+
+    <div id="example3"
+         data-sgvizler-endpoint="http://localhost:8081/sparql"
+         data-sgvizler-query="
+             SELECT ?lat ?long ?place
+             WHERE {
+                 ?rsrc <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat .
+                 ?rsrc <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?long .
+		 ?rsrc <http://purl.org/dc/elements/1.1/title> ?place .
+             }
+             "
+         data-sgvizler-chart="google.visualization.Map"
+         style="width:400px; height:300px;"></div>
+
+  </body>
+</html>
