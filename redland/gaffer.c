@@ -146,8 +146,6 @@ librdf_storage_gaffer_init(librdf_storage* storage, const char *name,
     if (append_slash) strcat(name_copy, "/");
     context->name = name_copy;
 
-    fprintf(stderr, "Name: %s\n", context->name);
-
     // Add options here.
 
     /* no more options, might as well free them now */
@@ -184,7 +182,7 @@ librdf_storage_gaffer_terminate(librdf_storage* storage)
 static int
 statement_helper(librdf_storage* storage,
 		 librdf_statement* statement,
-		 const unsigned char* fields[4],
+		 gaffer_term terms[4],
 		 librdf_node* context_node)
 {
     librdf_node* nodes[4];
@@ -196,26 +194,48 @@ statement_helper(librdf_storage* storage,
     nodes[3] = context_node;
 
     librdf_uri* uri;
-    
+    librdf_uri* dt_uri;
+
     for(i = 0; i < 4; i++) {
 
 	if (nodes[i] == 0) {
-	    fields[i] = 0;
+	    terms[i].term = 0;
+	    terms[i].type = GAFFER_NONE;
 	    continue;
 	}
+
+	const char* integer_type = "http://www.w3.org/2001/XMLSchema#integer";
+	const char* float_type = "http://www.w3.org/2001/XMLSchema#float";
 	
 	switch (librdf_node_get_type(nodes[i])) {
 	case LIBRDF_NODE_TYPE_RESOURCE:
 	    uri = librdf_node_get_uri(nodes[i]);
-	    fields[i] = librdf_uri_as_string(uri);
+	    terms[i].term = librdf_uri_as_string(uri);
+	    terms[i].type = GAFFER_URI;
 	    break;
 		
 	case LIBRDF_NODE_TYPE_LITERAL:
-	    fields[i] = librdf_node_get_literal_value(nodes[i]);
+	  
+	    dt_uri = librdf_node_get_literal_value_datatype_uri(nodes[i]);
+
+	    if (dt_uri == 0)
+		terms[i].type = GAFFER_STRING;
+	    else {
+		const char* type_uri = librdf_uri_as_string(dt_uri);
+		if (strcmp(type_uri, integer_type) == 0)
+		    terms[i].type = GAFFER_INTEGER;
+		else if (strcmp(type_uri, float_type) == 0)
+		    terms[i].type = GAFFER_FLOAT;
+		else
+		    terms[i].type = GAFFER_STRING;
+	    }
+
+	    terms[i].term = librdf_node_get_literal_value(nodes[i]);
 	    break;
 		
 	case LIBRDF_NODE_TYPE_BLANK:
-	    fields[i] = librdf_node_get_blank_identifier(nodes[i]);
+	    terms[i].term = librdf_node_get_blank_identifier(nodes[i]);
+	    terms[i].type = GAFFER_BLANK;
 	    break;
 
 	case LIBRDF_NODE_TYPE_UNKNOWN:
@@ -295,9 +315,9 @@ librdf_storage_gaffer_add_statements(librdf_storage* storage,
     librdf_storage_gaffer_instance* context;
     context = (librdf_storage_gaffer_instance*)storage->instance;
 
-    char* batch[GAFFER_BATCH_SIZE][3];
+    gaffer_term batch[GAFFER_BATCH_SIZE][3];
 
-    const unsigned char* fields[4];
+    gaffer_term terms[4];
     
     int rows = 0;
 
@@ -314,10 +334,12 @@ librdf_storage_gaffer_add_statements(librdf_storage* storage,
 	    break;
 	}
 
-	statement_helper(storage, statement, fields, context_node);
+	statement_helper(storage, statement, terms, context_node);
 
-	for(int j = 0; j < 3; j++)
-	    batch[rows][j] = strdup(fields[j]);
+	for(int j = 0; j < 3; j++) {
+	    batch[rows][j].term = strdup(terms[j].term);
+	    batch[rows][j].type = terms[j].type;
+	}
 
 	rows++;
 
@@ -327,7 +349,7 @@ librdf_storage_gaffer_add_statements(librdf_storage* storage,
 
 	    for(int i = 0; i < rows; i++)
 		for(int j = 0; j < 3; j++)
-		    free(batch[i][j]);
+		    free(batch[i][j].term);
 
 	    rows = 0;
 
@@ -340,7 +362,7 @@ librdf_storage_gaffer_add_statements(librdf_storage* storage,
 
     for(int i = 0; i < rows; i++)
 	for(int j = 0; j < 3; j++)
-	    free(batch[i][j]);
+	    free(batch[i][j].term);
 
     return 0;
 }
@@ -373,14 +395,11 @@ librdf_storage_gaffer_context_contains_statement(librdf_storage* storage,
     context = (librdf_storage_gaffer_instance*)storage->instance;
 
     /* librdf_storage_gaffer_instance* context; */
-    const unsigned char* fields[4];
+    gaffer_term terms[4];
 
-    statement_helper(storage, statement, fields, context_node);
+    statement_helper(storage, statement, terms, context_node);
 
-    int count = gaffer_count(context->comms,
-			     (const char*) fields[0],
-			     (const char*) fields[1],
-			     (const char*) fields[2]);
+    int count = gaffer_count(context->comms, terms[0], terms[1], terms[2]);
     if (count < 0)
 	return -1;
     
@@ -401,6 +420,70 @@ typedef struct {
 
 } gaffer_results_stream;
 
+// FIXME: Duplicate!!!
+static
+char type_to_char(gaffer_type type)
+{
+    if (type == GAFFER_STRING) return 's';
+    if (type == GAFFER_URI) return 'u';
+    if (type == GAFFER_INTEGER) return 'i';
+    if (type == GAFFER_FLOAT) return 'f';
+    if (type == GAFFER_BLANK) return 'b';
+    if (type == GAFFER_NONE) return 'n';
+}
+
+static
+librdf_node* node_constructor_helper(librdf_world* world, gaffer_term t)
+{
+
+    librdf_node* o;
+
+    if (t.type == GAFFER_URI) {
+ 	o = librdf_new_node_from_uri_string(world,
+					    (unsigned char*) t.term);
+	return o;
+    }
+
+    if (t.type == GAFFER_STRING) {
+	o = librdf_new_node_from_literal(world,
+					 (unsigned char*) t.term, 0, 0);
+	return o;
+    }
+
+
+    if (t.type == GAFFER_INTEGER) {
+	librdf_uri* dt =
+	    librdf_new_uri(world,
+			   "http://www.w3.org/2001/XMLSchema#integer");
+	if (dt == 0)
+	    return 0;
+
+	o = librdf_new_node_from_typed_literal(world,
+					       t.term,
+					       0, dt);
+	librdf_free_uri(dt);
+	return o;
+    }
+    
+    if (t.type == GAFFER_FLOAT) {
+	librdf_uri* dt =
+	    librdf_new_uri(world,
+			   "http://www.w3.org/2001/XMLSchema#float");
+	if (dt == 0)
+	    return 0;
+
+	o = librdf_new_node_from_typed_literal(world,
+					       t.term,
+					       0, dt);
+	librdf_free_uri(dt);
+	return o;
+    }
+
+    return librdf_new_node_from_literal(world,
+					(unsigned char*) t.term, 0, 0);
+
+}
+
 static int
 gaffer_results_stream_end_of_stream(void* context)
 {
@@ -418,26 +501,16 @@ gaffer_results_stream_end_of_stream(void* context)
 
     int row = scontext->row;
 
+    gaffer_result* result = scontext->results->results + row;
+    
     librdf_node* s;
-    s = librdf_new_node_from_uri_string(scontext->storage->world,
-					(unsigned char*)
-					scontext->results->s[row]);
+    s = node_constructor_helper(scontext->storage->world, result->s);
 
     librdf_node* p;
-    p = librdf_new_node_from_uri_string(scontext->storage->world,
-					(unsigned char*) 
-					scontext->results->p[row]);
+    p = node_constructor_helper(scontext->storage->world, result->p);
 
     librdf_node* o;
-    if (librdf_heuristic_object_is_literal(scontext->results->o[row]))
-	o = librdf_new_node_from_literal(scontext->storage->world,
-					 (unsigned char*) 
-					 scontext->results->o[row],
-					 0, 0);
-    else
-	o = librdf_new_node_from_uri_string(scontext->storage->world,
-					    (unsigned char*) 
-					    scontext->results->o[row]);
+    o = node_constructor_helper(scontext->storage->world, result->o);
 
     scontext->statement =
 	librdf_new_statement_from_nodes(scontext->storage->world,
@@ -467,26 +540,16 @@ gaffer_results_stream_next_statement(void* context)
 
     int row = scontext->row;
 
+    gaffer_result* result = scontext->results->results + row;
+
     librdf_node* s;
-    s = librdf_new_node_from_uri_string(scontext->storage->world,
-					(unsigned char*)
-					scontext->results->s[row]);
+    s = node_constructor_helper(scontext->storage->world, result->s);
 
     librdf_node* p;
-    p = librdf_new_node_from_uri_string(scontext->storage->world,
-					(unsigned char*)
-					scontext->results->p[row]);
+    p = node_constructor_helper(scontext->storage->world, result->p);
 
     librdf_node* o;
-    if (librdf_heuristic_object_is_literal(scontext->results->o[row]))
-	o = librdf_new_node_from_literal(scontext->storage->world,
-					 (unsigned char*)
-					 scontext->results->o[row],
-					 0, 0);
-    else
-	o = librdf_new_node_from_uri_string(scontext->storage->world,
-					    (unsigned char*)
-					    scontext->results->o[row]);
+    o = node_constructor_helper(scontext->storage->world, result->o);
 
     scontext->statement =
 	librdf_new_statement_from_nodes(scontext->storage->world,
@@ -565,7 +628,12 @@ librdf_storage_gaffer_serialise(librdf_storage* storage)
 
     scontext->gaffer_context = context;
 
-    gaffer_results* gres = gaffer_find(context->comms, 0, 0, 0);
+    gaffer_term s, p, o;
+    s.term = 0;
+    p.term = 0;
+    o.term = 0;
+
+    gaffer_results* gres = gaffer_find(context->comms, s, p, o);
 
     scontext->results = gres;
     scontext->row = 0;
@@ -607,8 +675,8 @@ librdf_storage_gaffer_find_statements(librdf_storage* storage,
     librdf_storage_gaffer_instance* context;
     gaffer_results_stream* scontext;
     librdf_stream* stream;
-    const unsigned char* fields[4];
-  
+    gaffer_term terms[4];
+
     context = (librdf_storage_gaffer_instance*)storage->instance;
 
     scontext =
@@ -621,12 +689,10 @@ librdf_storage_gaffer_find_statements(librdf_storage* storage,
 
     scontext->gaffer_context = context;
 
-    statement_helper(storage, statement, fields, 0);
+    statement_helper(storage, statement, terms, 0);
 
     gaffer_results* gres = gaffer_find(context->comms,
-				       (const char*) fields[0],
-				       (const char*) fields[1],
-				       (const char*) fields[2]);
+				       terms[0], terms[1], terms[2]);
 
     scontext->results = gres;
     scontext->row = 0;
@@ -662,24 +728,23 @@ librdf_storage_gaffer_context_add_statement(librdf_storage* storage,
                                             librdf_node* context_node,
                                             librdf_statement* statement) 
 {
-    const unsigned char* fields[4];
+    gaffer_term terms[4];
 
+    // FIXME
 #ifdef DUPLICATE_STATEMENT_CHECKING
     /* Do not add duplicate statements */
     if (librdf_storage_gaffer_context_contains_statement(storage, context_node, statement))
 	return 0;
 #endif
 
-    statement_helper(storage, statement, fields, context_node);
+    statement_helper(storage, statement, terms, context_node);
 
     librdf_storage_gaffer_instance* context; 
     context = (librdf_storage_gaffer_instance*)storage->instance;
 
-    int ret = gaffer_add(context->comms,
-			 (const char*) fields[0],
-			 (const char*) fields[1],
-			 (const char*) fields[2]);
-    if (ret < 0) return -1;
+    int ret = gaffer_add(context->comms, terms[0], terms[1], terms[2]);
+    if (ret < 0)
+	return -1;
 
     return 0;
 
@@ -701,18 +766,16 @@ librdf_storage_gaffer_context_remove_statement(librdf_storage* storage,
                                                librdf_node* context_node,
                                                librdf_statement* statement) 
 {
-    const unsigned char* fields[4];
+    gaffer_term terms[4];
 
-    statement_helper(storage, statement, fields, context_node);
+    statement_helper(storage, statement, terms, context_node);
 
     librdf_storage_gaffer_instance* context;
     context = (librdf_storage_gaffer_instance*)storage->instance;
 
-    int ret = gaffer_remove(context->comms,
-			    (const char*) fields[0],
-			    (const char*) fields[1],
-			    (const char*) fields[2]);
-    if (ret < 0) return -1;
+    int ret = gaffer_remove(context->comms, terms[0], terms[1], terms[2]);
+    if (ret < 0)
+	return -1;
 
     return 0;
 

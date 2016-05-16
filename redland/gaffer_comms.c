@@ -25,31 +25,29 @@ typedef struct {
 } http_upload_buffer;
  
 static 
-void add_result(gaffer_results* res, const char* s, const char* p, const char* o)
+void add_result(gaffer_results* res,
+		const char* s, const char* p, const char* o,
+		gaffer_type stype, gaffer_type ptype, gaffer_type otype)
 {
 
     res->count++;
 
-    size_t size = sizeof(char*) * res->count;
+    if (res->results)
+	res->results =
+	    (gaffer_result*) realloc(res->results,
+				     res->count * sizeof(gaffer_result));
+	else
+	res->results =
+	    (gaffer_result*) malloc(res->count * sizeof(gaffer_result));
 
-    if (res->s)
-	res->s = (char**) realloc (res->s, size);
-    else
-	res->s = (char**) malloc (size);
-
-    if (res->p)
-	res->p = (char**) realloc (res->p, size);
-    else
-	res->p = (char**) malloc (size);
-
-    if (res->o)
-	res->o = (char**) realloc (res->o, size);
-    else
-	res->o = (char**) malloc (size);
-
-    res->s[res->count - 1] = strdup(s);
-    res->p[res->count - 1] = strdup(p);
-    res->o[res->count - 1] = strdup(o);
+    gaffer_result* result = res->results + (res->count - 1);
+    
+    result->s.term = strdup(s);
+    result->p.term = strdup(p);
+    result->o.term = strdup(o);
+    result->s.type = stype;
+    result->p.type = ptype;
+    result->o.type = otype;
 
 }
 
@@ -104,7 +102,8 @@ static size_t http_upload_callback(void* ptr, size_t size, size_t nmemb,
 }
 
 static
-int gaffer_http_get(gaffer_comms* gc, const char* url, http_dload_buffer* buffer,
+int gaffer_http_get(gaffer_comms* gc, const char* url,
+		    http_dload_buffer* buffer,
 		    long* http_code)
 {
 
@@ -118,8 +117,6 @@ int gaffer_http_get(gaffer_comms* gc, const char* url, http_dload_buffer* buffer
     if (url2 == 0) return -1;
 
     sprintf(url2, "%s%s", gc->url, url);
-
-    fprintf(stderr, "URL: %s\n", url2);
 
     curl_easy_setopt(gc->curl, CURLOPT_URL, url2);
     curl_easy_setopt(gc->curl, CURLOPT_WRITEFUNCTION, &http_dload_callback);
@@ -228,9 +225,13 @@ void gaffer_disconnect(gaffer_comms* gc)
 }
 
 int gaffer_count(gaffer_comms* gc,
-		 const char* s, const char* p, const char* o)
+		 gaffer_term s, gaffer_term p, gaffer_term o)
 {
 
+    // FIXME: Not implemented.
+    return 100;
+
+#ifdef BROKEN
     json_object* obj = json_object_new_object();
 
     if (s) {
@@ -292,6 +293,8 @@ int gaffer_count(gaffer_comms* gc,
 
     return count;
 
+#endif
+
 }
 
 
@@ -341,17 +344,10 @@ void add_edge_object(json_object* elts, const char* edge,
     json_object_object_add(namep,
 			   "gaffer.function.simple.types.FreqMap", namefm);
 
-//    json_object* typep = json_object_new_object();
-//    json_object* typefm = json_object_new_object();
-
     json_object_object_add(namefm, type, json_object_new_int(1));
-
-//    json_object_object_add(typep,
-//			   "gaffer.function.simple.types.FreqMap", typefm);
 
     json_object* props = json_object_new_object();
     json_object_object_add(props, "name", namep);
-//    json_object_object_add(props, type, typep);
 
     json_object_object_add(elt, "properties", props);
 
@@ -367,18 +363,40 @@ void add_edge_object(json_object* elts, const char* edge,
 
 }
 
+static
+char type_to_char(gaffer_type type)
+{
+    if (type == GAFFER_STRING) return 's';
+    if (type == GAFFER_URI) return 'u';
+    if (type == GAFFER_INTEGER) return 'i';
+    if (type == GAFFER_FLOAT) return 'f';
+    if (type == GAFFER_BLANK) return 'b';
+    if (type == GAFFER_NONE) return 'n';
+}
+
+static
+gaffer_type char_to_type(char type)
+{
+    if (type == 's') return GAFFER_STRING;
+    if (type == 'u') return GAFFER_URI;
+    if (type == 'i') return GAFFER_INTEGER;
+    if (type == 'f') return GAFFER_FLOAT;
+    if (type == 'b') return GAFFER_BLANK;
+    if (type == 'n') return GAFFER_NONE;
+}
+
 int gaffer_add(gaffer_comms* gc,
-	       const char* s, const char* p, const char* o)
+	       gaffer_term s, gaffer_term p, gaffer_term o)
 {
     
-    char* snode = (char*) malloc(strlen(s) + 3);
-    sprintf(snode, "n:%s", s);
+    char* snode = (char*) malloc(strlen(s.term) + 5);
+    sprintf(snode, "n:%c:%s", type_to_char(s.type), s.term);
     
-    char* pnode = (char*) malloc(strlen(p) + 3);
-    sprintf(pnode, "r:%s", p);
+    char* pnode = (char*) malloc(strlen(p.term) + 5);
+    sprintf(pnode, "r:%c:%s", type_to_char(p.type), p.term);
     
-    char* onode = (char*) malloc(strlen(o) + 3);
-    sprintf(onode, "n:%s", o);
+    char* onode = (char*) malloc(strlen(o.term) + 5);
+    sprintf(onode, "n:%c:%s", type_to_char(o.type), o.term);
 
     // FIXME: Doesn't check for it's existing.
 
@@ -410,7 +428,6 @@ int gaffer_add(gaffer_comms* gc,
     /* Add elements to object */
     const char* j = json_object_to_json_string(obj);
 
-    // Web look-up for a random page.  FIXME: WHY?!
     http_dload_buffer download;
 
     http_upload_buffer upload;
@@ -439,7 +456,8 @@ int gaffer_add(gaffer_comms* gc,
 }
 
 int gaffer_add_batch(gaffer_comms* gc,
-		     char* batch[GAFFER_BATCH_SIZE][3], int rows, int columns)
+		     gaffer_term batch[GAFFER_BATCH_SIZE][3],
+		     int rows, int columns)
 {
 
     json_object* obj = json_object_new_object();
@@ -448,18 +466,18 @@ int gaffer_add_batch(gaffer_comms* gc,
   
     for(int i = 0; i < rows; i++) {
 
-	char* s = batch[i][0];
-	char* p = batch[i][1];
-	char* o = batch[i][2];
+	char* s = batch[i][0].term;
+	char* p = batch[i][1].term;
+	char* o = batch[i][2].term;
       
-	char* snode = (char*) malloc(strlen(s) + 3);
-	sprintf(snode, "n:%s", s);
+	char* snode = (char*) malloc(strlen(s) + 5);
+	sprintf(snode, "n:%c:%s", type_to_char(batch[i][0].type), s);
       
-	char* pnode = (char*) malloc(strlen(p) + 3);
-	sprintf(pnode, "r:%s", p);
+	char* pnode = (char*) malloc(strlen(p) + 5);
+	sprintf(pnode, "r:%c:%s", type_to_char(batch[i][1].type), p);
       
-	char* onode = (char*) malloc(strlen(o) + 3);
-	sprintf(onode, "n:%s", o);
+	char* onode = (char*) malloc(strlen(o) + 5);
+	sprintf(onode, "n:%c:%s", type_to_char(batch[i][2].type), o);
 
 	/* Create S node */
 	add_node_object(elts, snode);
@@ -515,12 +533,12 @@ int gaffer_add_batch(gaffer_comms* gc,
 }
 
 int gaffer_remove(gaffer_comms* gc,
-		  const char* s, const char* p, const char* o)
+		  gaffer_term s, gaffer_term p, gaffer_term o)
 {
 
     // FIXME: Not implemented!
     return 0;
-
+#ifdef BROKEN
     json_object* obj = json_object_new_object();
 
     json_object* js = json_object_new_string(s);
@@ -556,6 +574,8 @@ int gaffer_remove(gaffer_comms* gc,
 
     return 0;
 
+#endif
+
 }
 
 gaffer_results* gaffer_relatededge_results_parse(json_object* obj, int spo)
@@ -568,9 +588,7 @@ gaffer_results* gaffer_relatededge_results_parse(json_object* obj, int spo)
 	return 0;
     }
 
-    res->s = 0;
-    res->p = 0;
-    res->o = 0;
+    res->results = 0;
     res->count = 0;
 
     int triples = json_object_array_length(obj);
@@ -595,8 +613,8 @@ gaffer_results* gaffer_relatededge_results_parse(json_object* obj, int spo)
 	s = json_object_get_string(source);
 	d = json_object_get_string(destination);
 
-	if (strlen(s) < 2) continue;
-	if (strlen(d) < 2) continue;
+	if (strlen(s) < 4) continue;
+	if (strlen(d) < 4) continue;
 
 	if (s[0] != 'n' && s[1] != ':') continue;
 
@@ -618,23 +636,37 @@ gaffer_results* gaffer_relatededge_results_parse(json_object* obj, int spo)
 
 	struct lh_table* hash = json_object_get_object(property);
 
-	struct lh_entry* hash_entry;
-	for(hash_entry = hash->head; hash_entry; hash_entry = hash_entry->next) {
+	struct lh_entry* hash_entry = hash->head;
+	for(; hash_entry; hash_entry = hash_entry->next) {
+	
+	    json_object* val = (json_object*) hash_entry->v;
+
+//	    json_type type = json_object_get_type(val);
+//	    printf("%s: %d\n", k, type);
 	
 	    char* k = (char*) hash_entry->k;
 
 	    // These aren't real relationships.
 	    if (k[0] == '@') continue;
+
+	    // Shouldn't happen.
+	    if (strlen(k) < 4) continue;
 	    
 	    if (spo)
 		if (k[0] != 'r' && k[1] != ':') continue;
 	    else
 		if (k[0] != 'n' && k[1] != ':') continue;
-	
+
+	    // Shouldn't happen.
+	    if (k[3] != ':') continue;
+
 	    if (spo)
-		add_result(res, s + 2, k + 2, d + 2);
+		add_result(res, s + 4, k + 4, d + 4,
+			   char_to_type(s[2]), char_to_type(k[2]),
+			   char_to_type(d[2]));
 	    else
-		add_result(res, s + 2, d + 2, k + 2);
+		add_result(res, s + 4, d + 4, k + 4, char_to_type(s[2]),
+			   char_to_type(d[2]), char_to_type(k[2]));
 
 	}
 
@@ -736,6 +768,7 @@ void configure_edge_filter_view(json_object* obj, const char* edge)
 
 }
 
+// FIXME: Code is almost identical to edge_filter_view.
 static
 void configure_relationship_filter_view(json_object* obj)
 {
@@ -781,10 +814,8 @@ void configure_relationship_filter_view(json_object* obj)
 }
 
 gaffer_results* gaffer_query_(gaffer_comms* gc,
-			      const char* s, const char* p, const char* o)
+			      gaffer_term s, gaffer_term p, gaffer_term o)
 {
-
-    fprintf(stderr, "Query strategy: ???\n");
 
     json_object* obj = json_object_new_object();
 
@@ -875,13 +906,11 @@ gaffer_results* gaffer_query_(gaffer_comms* gc,
 }
 
 gaffer_results* gaffer_query_s(gaffer_comms* gc,
-			       const char* s, const char* p, const char* o)
+			       gaffer_term s, gaffer_term p, gaffer_term o)
 {
 
-    fprintf(stderr, "Query strategy: S??\n");
-
-    char* snode = (char*) malloc(strlen(s) + 3);
-    sprintf(snode, "n:%s", s);
+    char* snode = (char*) malloc(strlen(s.term) + 5);
+    sprintf(snode, "n:%c:%s", type_to_char(s.type), s);
 
     json_object* obj = json_object_new_object();
 
@@ -933,13 +962,11 @@ gaffer_results* gaffer_query_s(gaffer_comms* gc,
 }
 
 gaffer_results* gaffer_query_o(gaffer_comms* gc,
-			       const char* s, const char* p, const char* o)
+			       gaffer_term s, gaffer_term p, gaffer_term o)
 {
 
-    fprintf(stderr, "Query strategy: ??O\n");
-
-    char* onode = (char*) malloc(strlen(o) + 3);
-    sprintf(onode, "n:%s", o);
+    char* onode = (char*) malloc(strlen(o.term) + 5);
+    sprintf(onode, "n:%c:%s", type_to_char(o.type), o);
 
     json_object* obj = json_object_new_object();
 
@@ -989,13 +1016,11 @@ gaffer_results* gaffer_query_o(gaffer_comms* gc,
 }
 
 gaffer_results* gaffer_query_p(gaffer_comms* gc,
-			       const char* s, const char* p, const char* o)
+			       gaffer_term s, gaffer_term p, gaffer_term o)
 {
 
-    fprintf(stderr, "Query strategy: ?P?\n");
-
-    char* pnode = (char*) malloc(strlen(p) + 3);
-    sprintf(pnode, "r:%s", p);
+    char* pnode = (char*) malloc(strlen(p.term) + 5);
+    sprintf(pnode, "r:%c:%s", type_to_char(p.type), p);
 
     json_object* obj = json_object_new_object();
 
@@ -1045,16 +1070,14 @@ gaffer_results* gaffer_query_p(gaffer_comms* gc,
 }
 
 gaffer_results* gaffer_query_sp(gaffer_comms* gc,
-				const char* s, const char* p, const char* o)
+				gaffer_term s, gaffer_term p, gaffer_term o)
 {
 
-    fprintf(stderr, "Query strategy: SP?\n");
+    char* snode = (char*) malloc(strlen(s.term) + 5);
+    sprintf(snode, "n:%c:%s", type_to_char(s.type), s.term);
 
-    char* snode = (char*) malloc(strlen(s) + 3);
-    sprintf(snode, "n:%s", s);
-
-    char* pnode = (char*) malloc(strlen(p) + 3);
-    sprintf(pnode, "r:%s", p);
+    char* pnode = (char*) malloc(strlen(p.term) + 5);
+    sprintf(pnode, "r:%c:%s", type_to_char(p.type), p.term);
 
     json_object* obj = json_object_new_object();
 
@@ -1106,16 +1129,14 @@ gaffer_results* gaffer_query_sp(gaffer_comms* gc,
 }
 
 gaffer_results* gaffer_query_po(gaffer_comms* gc,
-				const char* s, const char* p, const char* o)
+				gaffer_term s, gaffer_term p, gaffer_term o)
 {
 
-    fprintf(stderr, "Query strategy: ?PO\n");
+    char* pnode = (char*) malloc(strlen(p.term) + 5);
+    sprintf(pnode, "r:%c:%s", type_to_char(p.type), p.term);
 
-    char* pnode = (char*) malloc(strlen(p) + 3);
-    sprintf(pnode, "r:%s", p);
-
-    char* onode = (char*) malloc(strlen(o) + 3);
-    sprintf(onode, "n:%s", o);
+    char* onode = (char*) malloc(strlen(o.term) + 5);
+    sprintf(onode, "n:%c:%s", type_to_char(o.type), o.term);
 
     json_object* obj = json_object_new_object();
 
@@ -1168,16 +1189,14 @@ gaffer_results* gaffer_query_po(gaffer_comms* gc,
 }
 
 gaffer_results* gaffer_query_so(gaffer_comms* gc,
-				const char* s, const char* p, const char* o)
+				gaffer_term s, gaffer_term p, gaffer_term o)
 {
 
-    fprintf(stderr, "Query strategy: S?O\n");
+    char* snode = (char*) malloc(strlen(s.term) + 5);
+    sprintf(snode, "n:%c:%s", type_to_char(s.type), s.term);
 
-    char* snode = (char*) malloc(strlen(s) + 3);
-    sprintf(snode, "n:%s", s);
-
-    char* onode = (char*) malloc(strlen(o) + 3);
-    sprintf(onode, "n:%s", o);
+    char* onode = (char*) malloc(strlen(o.term) + 5);
+    sprintf(onode, "n:%c:%s", type_to_char(o.type), o.term);
 
     json_object* obj = json_object_new_object();
 
@@ -1232,19 +1251,17 @@ gaffer_results* gaffer_query_so(gaffer_comms* gc,
 
 // FIXME: Would this ever be called?
 gaffer_results* gaffer_query_spo(gaffer_comms* gc,
-				 const char* s, const char* p, const char* o)
+				 gaffer_term s, gaffer_term p, gaffer_term o)
 {
 
-    fprintf(stderr, "Query strategy: ?SO\n");
+    char* snode = (char*) malloc(strlen(s.term) + 5);
+    sprintf(snode, "n:%c:%s", type_to_char(s.type), s.term);
 
-    char* snode = (char*) malloc(strlen(s) + 3);
-    sprintf(snode, "n:%s", s);
+    char* pnode = (char*) malloc(strlen(p.term) + 5);
+    sprintf(pnode, "r:%c:%s", type_to_char(p.type), p.term);
 
-    char* pnode = (char*) malloc(strlen(p) + 3);
-    sprintf(pnode, "r:%s", p);
-
-    char* onode = (char*) malloc(strlen(o) + 3);
-    sprintf(onode, "n:%s", o);
+    char* onode = (char*) malloc(strlen(o.term) + 5);
+    sprintf(onode, "n:%c:%s", type_to_char(o.type), o.term);
 
     json_object* obj = json_object_new_object();
 
@@ -1295,12 +1312,12 @@ gaffer_results* gaffer_query_spo(gaffer_comms* gc,
 }
 
 typedef gaffer_results* (*query_function)(gaffer_comms* gc,
-					  const char* s,
-					  const char* p,
-					  const char* o);
+					  gaffer_term s,
+					  gaffer_term p,
+					  gaffer_term o);
 
 gaffer_results* gaffer_find(gaffer_comms* gc,
-			    const char* s, const char* p, const char* o)
+			    gaffer_term s, gaffer_term p, gaffer_term o)
 {
 
     /* ... s.. .p. sp. ..o s.o .po spo */
@@ -1317,11 +1334,9 @@ gaffer_results* gaffer_find(gaffer_comms* gc,
 
     int num = 0;
 
-    if (o) num += 4;
-    if (p) num += 2;
-    if (s) num++;
-
-    fprintf(stderr, "Query strategy: function %d\n", num);
+    if (o.term) num += 4;
+    if (p.term) num += 2;
+    if (s.term) num++;
 
     return (*functions[num])(gc, s, p, o);
 
@@ -1331,14 +1346,12 @@ void gaffer_free_results(gaffer_results* gres)
 {
 
     for(int i = 0; i < gres->count; i++) {
-	free(gres->s[i]);
-	free(gres->p[i]);
-	free(gres->o[i]);
+	free(gres->results[i].s.term);
+	free(gres->results[i].p.term);
+	free(gres->results[i].o.term);
     }
 
-    free(gres->s);
-    free(gres->p);
-    free(gres->o);
+    free(gres->results);
 
     free(gres);
 
