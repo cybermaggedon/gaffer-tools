@@ -22,6 +22,9 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_HEAD(s):
         s.send_response(200)
         s.send_header("Content-type", "text/html")
+        s.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        s.send_header("Pragma", "no-cache")
+        s.send_header("Expires", "0")
         s.end_headers()
 
     def do_sparql(s):
@@ -55,7 +58,11 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.send_response(200)
         s.send_header("Content-type", "text/plain")
 	s.send_header("Content-length", len(body))
-	s.end_headers()
+        s.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        s.send_header("Pragma", "no-cache")
+        s.send_header("Expires", "0")
+        s.send_header("Access-Control-Allow-Origin", "*")
+        s.end_headers()
 
 	s.wfile.write(body)
 
@@ -67,6 +74,9 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.send_response(404)
         s.send_header("Content-type", "text/plain")
 	s.send_header("Content-length", len(body))
+        s.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        s.send_header("Pragma", "no-cache")
+        s.send_header("Expires", "0")
 	s.end_headers()
 
     def do_GET(s):
@@ -82,6 +92,9 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.send_response(404)
         s.send_header("Content-type", "text/plain")
 	s.send_header("Content-length", len(body))
+        s.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        s.send_header("Pragma", "no-cache")
+        s.send_header("Expires", "0")
 	s.end_headers()
 
 	s.wfile.write(body)
