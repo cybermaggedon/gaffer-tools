@@ -286,3 +286,15 @@ You should see a page like the shot below.
 
 Sgvizler is open source, released under the MIT licence.
 
+### d3sparql
+
+Similar to Sgvizler is d3sparql, which feeds the results of a SPARQL query
+to the D3 visualisation tool.
+
+I've bundled a copy of d3sparql, and a sample web page in the git repository.
+To view, point your web-browser at d3sparql/cornwall.html in the source tree.
+You should see a page like the shot below.
+
+![screenshot](screenshot3.png "screenshot")
+
+Sgvizler is open source, released under the BSD licence.

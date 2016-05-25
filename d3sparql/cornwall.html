@@ -34,22 +34,12 @@
     ";
     d3sparql.query(endpoint, sparql2, render2);
 
-    var sparql3 = "\
-             SELECT ?lat ?long ?place \
-             WHERE { \
-                 ?rsrc <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat . \
-                 ?rsrc <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?long . \
-		 ?rsrc <http://purl.org/dc/elements/1.1/title> ?place . \
-             } \
-    ";
-    d3sparql.query(endpoint, sparql3, render3);
-
   }
   
   function render1(json) {
      var config = {
         "label_x": "Town",
-        "label_y": "Area",
+        "label_y": "Population",
         "var_x": "place",
         "var_y": "population",
         "width":  700,  // canvas width
@@ -66,42 +56,22 @@
 	"size": "population",
 	"width": 400,
 	"height": 400,
-        "hole":  90,
+        "hole":  50,
         "selector": "#chart2"
       };
       d3sparql.piechart(json, config);
   }
 
-  function render3(json) {
-      var config = {
-        "var_lat": "lat",
-        "var_lng": "long",
-        "width": 500,
-        "height": 500,
-        "radius": 5,
-        "color": "#55C25E",
-        "topojson": "lib/d3/map/world-50m.json",
-        "selector": "#result"
-      };
-      d3sparql.coordmap(json, config);
-    }
-    
 </script>
   <style>
   <!-- customize CSS -->
   </style>
  </head>
  <body onload="exec()">
-  <form style="display:none">
-   <input id="endpoint" value="http://dbpedia.org/sparql" type="text">
-   <textarea id="sparql">
-    PREFIX ...
-    SELECT ...
-    WHERE { ... }
-   </textarea>
-  </form>
+  <h1>Cornwall visualisation using d3sparql</h1>
+  <h2>Most populous towns - bar chart</h2>
   <div id="chart1"></div>
+  <h2>Most populous towns - pie chart</h2>
   <div id="chart2"></div>
-  <div id="chart3"></div>
  </body>
 </html>
