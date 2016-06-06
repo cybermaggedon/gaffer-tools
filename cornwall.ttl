@@ -1,11 +1,14 @@
 @base <http://gaffer.test/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix dbpedia: <http://dbpedia.org/> .
-@prefix dbo: <http://dbpedia.org/ontology/> .
-@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix fo: <http://purl.org/ontology/fo/> .
 
 <#in-county>
     <http://purl.org/dc/elements/1.1/title> "County" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<#food-origin>
+    <http://purl.org/dc/elements/1.1/title> "Origin" ;
     a <http://www.w3.org/2000/01/rdf-schema#Property> .
 
 <#town>
@@ -17,36 +20,37 @@
     a <http://www.w3.org/2000/01/rdf-schema#Property> .
 
 <cornwall>
-    dbo:thumbnail <https://www.visitcornwall.com/sites/default/files/styles/content_fw_img_breakpoints_theme_visitcornwall2_all_1x/public/st-ives-.jpg?itok=aKbnaMxZ&timestamp=1450266297> ;
-    dbo:wikiPageExternalLink <https://en.wikipedia.org/wiki/Cornwall> ;
+    <http://dbpedia.org/ontology/thumbnail> <https://www.visitcornwall.com/sites/default/files/styles/content_fw_img_breakpoints_theme_visitcornwall2_all_1x/public/st-ives-.jpg?itok=aKbnaMxZ&timestamp=1450266297> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Cornwall> ;
     <http://purl.org/dc/elements/1.1/title> "Cornwall" ;
-    a <http://www.w3.org/2000/01/rdf-schema#Resource> .
-
-<cornwall/#Bodmin>
-    dbo:thumbnail <https://upload.wikimedia.org/wikipedia/commons/8/8c/Shire_Hall%2C_Bodmin_-_geograph.org.uk_-_50323.jpg> ;
-    dbo:wikiPageExternalLink <https://en.wikipedia.org/wiki/Bodmin> ;
+    a <http://www.w3.org/2000/01/rdf-schema#Resource> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Cornwall> .
+    
+<cornwall/Bodmin>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/8/8c/Shire_Hall%2C_Bodmin_-_geograph.org.uk_-_50323.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Bodmin> ;
     <#in-county> <cornwall> ;
     <#town-population> 15300 ;
     <http://purl.org/dc/elements/1.1/title> "Bodmin" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> dbr:Bodmin ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Bodmin> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.466"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.718"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Bude>
-    dbo:thumbnail <https://upload.wikimedia.org/wikipedia/commons/0/00/Bude_Methodist_Church.jpg>, <https://upload.wikimedia.org/wikipedia/commons/c/cc/Bude_castle_-_geograph.org.uk_-_1457352.jpg>, <https://upload.wikimedia.org/wikipedia/commons/d/da/Bude_01_River_Neet.jpg>, <https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Bude_Beach.jpg/800px-Bude_Beach.jpg>, <https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Bude_outer_harbour.jpg/786px-Bude_outer_harbour.jpg> ;
-    dbo:wikiPageExternalLink <https://en.wikipedia.org/wiki/Bude> ;
+<cornwall/Bude>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/0/00/Bude_Methodist_Church.jpg>, <https://upload.wikimedia.org/wikipedia/commons/c/cc/Bude_castle_-_geograph.org.uk_-_1457352.jpg>, <https://upload.wikimedia.org/wikipedia/commons/d/da/Bude_01_River_Neet.jpg>, <https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Bude_Beach.jpg/800px-Bude_Beach.jpg>, <https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Bude_outer_harbour.jpg/786px-Bude_outer_harbour.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Bude> ;
     <#in-county> <cornwall> ;
     <#town-population> 9900 ;
     <http://purl.org/dc/elements/1.1/title> "Bude" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <http://data.ordnancesurvey.co.uk/id/osgb4000000074577442>, dbr:Bude, <http://sws.geonames.org/2654380> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://data.ordnancesurvey.co.uk/id/osgb4000000074577442>, <http://dbpedia.org/resource/Bude>, <http://sws.geonames.org/2654380> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.824"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.542"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Callington>
-    dbo:thumbnail <https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Callington_1.jpg/800px-Callington_1.jpg> ;
-    dbo:wikiPageExternalLink <https://en.wikipedia.org/wiki/Callington,_Cornwall> ;
+<cornwall/Callington>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Callington_1.jpg/800px-Callington_1.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Callington,_Cornwall> ;
     <#in-county> <cornwall> ;
     <#town-population> 5900 ;
     <http://purl.org/dc/elements/1.1/title> "Callington" ;
@@ -55,31 +59,31 @@
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.503"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.316"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Camborne>
-    dbo:thumbnail <https://upload.wikimedia.org/wikipedia/commons/9/99/Camborne_Commercial_Square.jpg> ;
-    dbo:wikiPageExternalLink <https://en.wikipedia.org/wiki/Camborne> ;
+<cornwall/Camborne>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/9/99/Camborne_Commercial_Square.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Camborne> ;
     <#in-county> <cornwall> ;
     <#town-population> 21600 ;
     <http://purl.org/dc/elements/1.1/title> "Camborne" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> dbr:Camborne ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Camborne> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.213"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.300"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Camelford>
-    dbo:thumbnail <https://upload.wikimedia.org/wikipedia/commons/7/7b/The_Town_Hall%2C_Camelford_-_geograph.org.uk_-_1348974.jpg> ;
-    dbo:wikiPageExternalLink <https://en.wikipedia.org/wiki/Camelford> ;
+<cornwall/Camelford>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/7/7b/The_Town_Hall%2C_Camelford_-_geograph.org.uk_-_1348974.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Camelford> ;
     <#in-county> <cornwall> ;
     <#town-population> 3100 ;
     <http://purl.org/dc/elements/1.1/title> "Camelford" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> dbr:Camelford ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Camelford> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.617"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.683"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Falmouth>
-    dbo:thumbnail <https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Falmouth_Cornwall.jpg/800px-Falmouth_Cornwall.jpg> ;
-    dbo:wikiPageExternalLink <https://en.wikipedia.org/wiki/Falmouth,_Cornwall> ;
+<cornwall/Falmouth>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Falmouth_Cornwall.jpg/800px-Falmouth_Cornwall.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Falmouth,_Cornwall> ;
     <#in-county> <cornwall> ;
     <#town-population> 22300 ;
     <http://purl.org/dc/elements/1.1/title> "Falmouth" ;
@@ -88,311 +92,376 @@
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.150"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.070"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Fowey>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/8/80/Fowey%2C_Town_Quay_-_geograph.org.uk_-_47111.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Fowey> ;
+<cornwall/Fowey>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/8/80/Fowey%2C_Town_Quay_-_geograph.org.uk_-_47111.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Fowey> ;
     <#in-county> <cornwall> ;
     <#town-population> 2900 ;
     <http://purl.org/dc/elements/1.1/title> "Fowey" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Fowey> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Fowey> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.334"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.633"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Hayle>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/1646_-_Hayle_Estuary_from_the_electric_works.jpg/800px-1646_-_Hayle_Estuary_from_the_electric_works.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Hayle> ;
+<cornwall/Hayle>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/1646_-_Hayle_Estuary_from_the_electric_works.jpg/800px-1646_-_Hayle_Estuary_from_the_electric_works.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Hayle> ;
     <#in-county> <cornwall> ;
     <#town-population> 9500 ;
     <http://purl.org/dc/elements/1.1/title> "Hayle" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Hayle> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Hayle> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.183"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.416"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Helston>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/3/3e/Coinagehall_Street_Helston_-_geograph.org.uk_-_1300488.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Helston> ;
+<cornwall/Helston>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/3/3e/Coinagehall_Street_Helston_-_geograph.org.uk_-_1300488.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Helston> ;
     <#in-county> <cornwall> ;
     <#town-population> 11900 ;
     <http://purl.org/dc/elements/1.1/title> "Helston" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Helston> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Helston> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.100"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.270"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Illogan>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/b/b4/St_Illogan_Church_Bell_Tower_-_geograph.org.uk_-_188951.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Illogan> ;
+<cornwall/Illogan>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/b/b4/St_Illogan_Church_Bell_Tower_-_geograph.org.uk_-_188951.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Illogan> ;
     <#in-county> <cornwall> ;
     <#town-population> 6900 ;
     <http://purl.org/dc/elements/1.1/title> "Illogan" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Illogan> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Illogan> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.250"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.268"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Launceston>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/e/e8/Town_Square_-_geograph.org.uk_-_1286355.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Launceston,_Cornwall> ;
+<cornwall/Launceston>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/e/e8/Town_Square_-_geograph.org.uk_-_1286355.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Launceston,_Cornwall> ;
     <#in-county> <cornwall> ;
     <#town-population> 12200 ;
     <http://purl.org/dc/elements/1.1/title> "Launceston" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Launceston,_Cornwall> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Launceston,_Cornwall> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.635"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.354"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Liskeard>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/The_Guildhall%2C_Market_Street%2C_Liskeard_-_geograph.org.uk_-_666030.jpg/411px-The_Guildhall%2C_Market_Street%2C_Liskeard_-_geograph.org.uk_-_666030.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Liskeard> ;
+<cornwall/Liskeard>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/The_Guildhall%2C_Market_Street%2C_Liskeard_-_geograph.org.uk_-_666030.jpg/411px-The_Guildhall%2C_Market_Street%2C_Liskeard_-_geograph.org.uk_-_666030.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Liskeard> ;
     <#in-county> <cornwall> ;
     <#town-population> 9500 ;
     <http://purl.org/dc/elements/1.1/title> "Liskeard" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Liskeard> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Liskeard> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.454"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.465"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Looe>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/RiverLooe.jpg/800px-RiverLooe.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Looe> ;
+<cornwall/Looe>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/RiverLooe.jpg/800px-RiverLooe.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Looe> ;
     <#in-county> <cornwall> ;
     <#town-population> 5500 ;
     <http://purl.org/dc/elements/1.1/title> "Looe" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Looe> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Looe> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.354"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.454"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Lostwithiel>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Lostwithiel_bridge_river_Fowey_Cornwall.jpg/800px-Lostwithiel_bridge_river_Fowey_Cornwall.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Lostwithiel> ;
+<cornwall/Lostwithiel>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Lostwithiel_bridge_river_Fowey_Cornwall.jpg/800px-Lostwithiel_bridge_river_Fowey_Cornwall.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Lostwithiel> ;
     <#in-county> <cornwall> ;
     <#town-population> 3000 ;
     <http://purl.org/dc/elements/1.1/title> "Lostwithiel" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Lostwithiel> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Lostwithiel> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.407"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.700"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Millbrook>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Millbrook.jpg/800px-Millbrook.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Millbrook,_Cornwall> ;
+<cornwall/Millbrook>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Millbrook.jpg/800px-Millbrook.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Millbrook,_Cornwall> ;
     <#in-county> <cornwall> ;
     <#town-population> 2400 ;
     <http://purl.org/dc/elements/1.1/title> "Millbrook" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Millbrook,_Cornwall> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Millbrook,_Cornwall> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.348"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.217"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Newlyn>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/9/91/View_across_Newlyn_Harbour_-_geograph.org.uk_-_1579992.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Newlyn> ;
+<cornwall/Newlyn>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/9/91/View_across_Newlyn_Harbour_-_geograph.org.uk_-_1579992.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Newlyn> ;
     <#in-county> <cornwall> ;
     <#town-population> 3300 ;
     <http://purl.org/dc/elements/1.1/title> "Newlyn" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Newlyn> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Newlyn> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.101"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.553"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Newquay>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Newquayhill.jpg/800px-Newquayhill.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Newquay> ;
+<cornwall/Newquay>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Newquayhill.jpg/800px-Newquayhill.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Newquay> ;
     <#in-county> <cornwall> ;
     <#town-population> 20300 ;
     <http://purl.org/dc/elements/1.1/title> "Newquay" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Newquay> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Newquay> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.412"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.076"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Padstow>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Padstow_1.jpg/794px-Padstow_1.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Padstow> ;
+<cornwall/Padstow>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Padstow_1.jpg/794px-Padstow_1.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Padstow> ;
     <#in-county> <cornwall> ;
     <#town-population> 3800 ;
     <http://purl.org/dc/elements/1.1/title> "Padstow" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Padstow> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Padstow> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.538"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.938"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Penryn>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/a/a9/Geograph-2015028-by-David-Dixon.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Penryn,_Cornwall> ;
+<cornwall/Penryn>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/a/a9/Geograph-2015028-by-David-Dixon.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Penryn,_Cornwall> ;
     <#in-county> <cornwall> ;
     <#town-population> 7600 ;
     <http://purl.org/dc/elements/1.1/title> "Penryn" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Penryn,_Cornwall> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Penryn,_Cornwall> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.169"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.107"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Penzance>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/PZHARBOURPANORAMA.jpg/800px-PZHARBOURPANORAMA.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Penzance> ;
+<cornwall/Penzance>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/PZHARBOURPANORAMA.jpg/800px-PZHARBOURPANORAMA.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Penzance> ;
     <#in-county> <cornwall> ;
     <#town-population> 17900 ;
     <http://purl.org/dc/elements/1.1/title> "Penzance" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Penzance> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Penzance> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.119"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.537"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Perranporth>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/6/66/Droskyn_Point_-_geograph.org.uk_-_23562.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Perranporth> ;
+<cornwall/Perranporth>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/6/66/Droskyn_Point_-_geograph.org.uk_-_23562.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Perranporth> ;
     <#in-county> <cornwall> ;
     <#town-population> 3900 ;
     <http://purl.org/dc/elements/1.1/title> "Perranporth" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Perranporth> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Perranporth> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.344"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.155"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Pool>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Two_Engine_Houses_of_the_Grenville_United_Mine_-_geograph.org.uk_-_176792.jpg/555px-Two_Engine_Houses_of_the_Grenville_United_Mine_-_geograph.org.uk_-_176792.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Pool,_Cornwall> ;
+<cornwall/Pool>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Two_Engine_Houses_of_the_Grenville_United_Mine_-_geograph.org.uk_-_176792.jpg/555px-Two_Engine_Houses_of_the_Grenville_United_Mine_-_geograph.org.uk_-_176792.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Pool,_Cornwall> ;
     <#in-county> <cornwall> ;
     <#town-population> 3100 ;
     <http://purl.org/dc/elements/1.1/title> "Pool" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Pool,_Cornwall> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Pool,_Cornwall> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.228"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.266"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Porthleven>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/b/b3/The_Institute_and_Harbour_Road%2C_Porthleven_-_geograph.org.uk_-_230482.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Porthleven> ;
+<cornwall/Porthleven>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/b/b3/The_Institute_and_Harbour_Road%2C_Porthleven_-_geograph.org.uk_-_230482.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Porthleven> ;
     <#in-county> <cornwall> ;
     <#town-population> 2600 ;
     <http://purl.org/dc/elements/1.1/title> "Porthleven" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Porthleven> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Porthleven> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.084"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.315"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Redruth>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/9/9c/Redruth.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Redruth> ;
+<cornwall/Redruth>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/9/9c/Redruth.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Redruth> ;
     <#in-county> <cornwall> ;
     <#town-population> 15600 ;
     <http://purl.org/dc/elements/1.1/title> "Redruth" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Redruth> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Redruth> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.233"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.224"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Saltash>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/en/thumb/3/36/Bridges%2C_boats_and_trains_at_Saltash..jpg/800px-Bridges%2C_boats_and_trains_at_Saltash..jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Saltash> ;
+<cornwall/Saltash>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/en/thumb/3/36/Bridges%2C_boats_and_trains_at_Saltash..jpg/800px-Bridges%2C_boats_and_trains_at_Saltash..jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Saltash> ;
     <#in-county> <cornwall> ;
     <#town-population> 16600 ;
     <http://purl.org/dc/elements/1.1/title> "Saltash" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Saltash> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Saltash> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.408"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.212"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#StAgnes>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/d/d8/Churchtown%2C_St_Agnes_-_geograph.org.uk_-_367669.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/St_Agnes,_Cornwall> ;
+<cornwall/StAgnes>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/d/d8/Churchtown%2C_St_Agnes_-_geograph.org.uk_-_367669.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/St_Agnes,_Cornwall> ;
     <#in-county> <cornwall> ;
     <#town-population> 4000 ;
     <http://purl.org/dc/elements/1.1/title> "St. Agnes" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:St_Agnes,_Cornwall> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/St_Agnes,_Cornwall> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.312"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.204"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#StAustell>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/0/04/High_Cross_Street%2C_St_Austell_-_geograph.org.uk_-_1313370.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/St_Austell> ;
+<cornwall/StAustell>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/0/04/High_Cross_Street%2C_St_Austell_-_geograph.org.uk_-_1313370.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/St_Austell> ;
     <#in-county> <cornwall> ;
     <#town-population> 27400 ;
     <http://purl.org/dc/elements/1.1/title> "St. Austell" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:St_Austell> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/St_Austell> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.338"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.795"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#StBlazey>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/2/23/Station_Road%2C_St._Blazey%2C_Cornwall_-_geograph.org.uk_-_1249843.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/St_Blazey> ;
+<cornwall/StBlazey>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/2/23/Station_Road%2C_St._Blazey%2C_Cornwall_-_geograph.org.uk_-_1249843.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/St_Blazey> ;
     <#in-county> <cornwall> ;
     <#town-population> 6900 ;
     <http://purl.org/dc/elements/1.1/title> "St. Blazey" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:St_Blazey> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/St_Blazey> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.361"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.716"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#StColumbMajor>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/d/d8/Columba3.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/St_Columb_Major> ;
+<cornwall/StColumbMajor>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/d/d8/Columba3.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/St_Columb_Major> ;
     <#in-county> <cornwall> ;
     <#town-population> 3700 ;
     <http://purl.org/dc/elements/1.1/title> "St. Columb Major" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:St_Columb_Major> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/St_Columb_Major> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.432"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.940"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#StIves>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/5/54/Stives1.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/St_Ives,_Cornwall> ;
+<cornwall/StIves>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/5/54/Stives1.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/St_Ives,_Cornwall> ;
     <#in-county> <cornwall> ;
     <#town-population> 11500 ;
     <http://purl.org/dc/elements/1.1/title> "St. Ives" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:St_Ives,_Cornwall> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/St_Ives,_Cornwall> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.211"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.480"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Torpoint>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/6/61/Torpoint_War_Memorial_-_geograph.org.uk_-_72337.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Torpoint> ;
+<cornwall/Torpoint>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/6/61/Torpoint_War_Memorial_-_geograph.org.uk_-_72337.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Torpoint> ;
     <#in-county> <cornwall> ;
     <#town-population> 7700 ;
     <http://purl.org/dc/elements/1.1/title> "Torpoint" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Torpoint> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Torpoint> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.376"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.205"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Truro>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/d/d7/Truro_rooftops.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Truro> ;
+<cornwall/Truro>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/d/d7/Truro_rooftops.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Truro> ;
     <#in-county> <cornwall> ;
     <#town-population> 21000 ;
     <http://purl.org/dc/elements/1.1/title> "Truro" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Truro> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Truro> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.260"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-5.051"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#TywardreathAndPar>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/1/11/Par_Beach_-_geograph.org.uk_-_558792.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Par>, <https://en.wikipedia.org/wiki/Tywardreath>, <https://en.wikipedia.org/wiki/Tywardreath_and_Par> ;
+<cornwall/TywardreathAndPar>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/1/11/Par_Beach_-_geograph.org.uk_-_558792.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Par>, <https://en.wikipedia.org/wiki/Tywardreath>, <https://en.wikipedia.org/wiki/Tywardreath_and_Par> ;
     <#in-county> <cornwall> ;
     <#town-population> 1500 ;
     <http://purl.org/dc/elements/1.1/title> "Tywardreath and Par" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Tywardreath_and_Par> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Tywardreath_and_Par> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.357"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.694"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<cornwall/#Wadebridge>
-    <dbo:thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Wadebridge_Clock_tower.jpg/800px-Wadebridge_Clock_tower.jpg> ;
-    <dbo:wikiPageExternalLink> <https://en.wikipedia.org/wiki/Wadebridge> ;
+<cornwall/Wadebridge>
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Wadebridge_Clock_tower.jpg/800px-Wadebridge_Clock_tower.jpg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Wadebridge> ;
     <#in-county> <cornwall> ;
     <#town-population> 8000 ;
     <http://purl.org/dc/elements/1.1/title> "Wadebridge" ;
     a <#town> ;
-    <http://www.w3.org/2002/07/owl#sameAs> <dbr:Wadebridge> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Wadebridge> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "50.518"^^<http://www.w3.org/2001/XMLSchema#float> ;
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.885"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<cornwall/pasty>
+    <http://dbpedia.org/ontology/thumbnail> <https://en.wikipedia.org/wiki/Pasty#/media/File:Cornish_pasty.jpeg> ;
+    <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Pasty#Cornish_pasty> ;
+    <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Pasty> ;
+    <http://purl.org/dc/elements/1.1/title> "Cornish pasty" ;
+    <#food-origin> <cornwall> ;
+    fo:ingredients <cornwall/pasty_ingredients> ;
+    a fo:Recipe .
+
+<cornwall/pasty_ingredients>
+    a fo:IngredientList ;
+    rdf:_1 <cornwall/pasty_ingredients/butter> ;
+    rdf:_2 <cornwall/pasty_ingredients/lard> ;
+    rdf:_3 <cornwall/pasty_ingredients/flour> ;
+    rdf:_4 <cornwall/pasty_ingredients/egg> ;
+    rdf:_5 <cornwall/pasty_ingredients/steak> ;
+    rdf:_6 <cornwall/pasty_ingredients/onion> ;
+    rdf:_7 <cornwall/pasty_ingredients/potatoes> ;
+    rdf:_8 <cornwall/pasty_ingredients/swede> ;
+    rdf:_9 <cornwall/pasty_ingredients/black_pepper> .
+
+<cornwall/pasty_ingredients/butter>
+    a fo:Ingredient ;
+    <http://purl.org/dc/elements/1.1/title> "Chilled, diced butter" ;
+    fo:metric_quantity "125g" .
+
+<cornwall/pasty_ingredients/lard>
+    a fo:Ingredient ;
+    <http://purl.org/dc/elements/1.1/title> "Lard" ;
+    fo:metric_quantity "125g" .
+
+<cornwall/pasty_ingredients/flour>
+    a fo:Ingredient ;
+    <http://purl.org/dc/elements/1.1/title> "Flour" ;
+    fo:metric_quantity "500g" .
+
+<cornwall/pasty_ingredients/egg>
+    a fo:Ingredient ;
+    <http://purl.org/dc/elements/1.1/title> "Egg, beaten" ;
+    fo:quantity "1" .
+
+<cornwall/pasty_ingredients/steak>
+    a fo:Ingredient ;
+    <http://purl.org/dc/elements/1.1/title> "Chuck steak, finely chopped" ;
+    fo:metric_quantity "400g" .
+
+<cornwall/pasty_ingredients/onion>
+    a fo:Ingredient ;
+    <http://purl.org/dc/elements/1.1/title> "Large onion, finely chopped" ;
+    fo:quantity 1 .
+
+<cornwall/pasty_ingredients/potatoes>
+    a fo:Ingredient ;
+    <http://purl.org/dc/elements/1.1/title> "Medium potatoes, thinly sliced" ;
+    fo:quantity 2 .
+
+<cornwall/pasty_ingredients/swede>
+    a fo:Ingredient ;
+    <http://purl.org/dc/elements/1.1/title> "Swede, peeled, finely diced" ;
+    fo:metric_quantity "175g" .
+
+<cornwall/pasty_ingredients/black_pepper>
+    a fo:Ingredient ;
+    <http://purl.org/dc/elements/1.1/title> "1 tbsp ground black pepper" .
 

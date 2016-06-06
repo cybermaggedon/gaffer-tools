@@ -49,7 +49,7 @@ $.jStorage.set('profile', {
 			endpoint : 'http://localhost:8081/sparql',
 			examples : [{
 				label : 'Fowey',
-				uri : 'http://gaffer.test/cornwall/#Fowey'
+				uri : 'http://gaffer.test/cornwall/Fowey'
 			}, {
 				label : 'Cornwall',
 				uri : 'http://gaffer.test/cornwall'
