@@ -10,6 +10,7 @@ import gaffer.user.User;
 import gaffer.graph.Graph;
 import gaffer.operation.OperationException;
 import gaffer.operation.OperationChain;
+import gaffer.operation.Operation;
 import gaffer.operation.impl.get.GetRelatedEdges;
 import java.io.InputStream;
 import java.io.FileInputStream;
@@ -70,7 +71,7 @@ class GafferEntryPoint {
 	o = (GetRelatedEdges) j.deserialise(json.getBytes(),
 					    GetRelatedEdges.class);
 
-	Iterable<Edge> edges = graph.execute(o, user);
+	Iterable<Edge> edges = (Iterable<Edge>) graph.execute(o, user);
 
 	byte[] result = j.serialise(edges);
 
