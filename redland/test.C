@@ -3,6 +3,7 @@
 #include <redland.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdexcept>
 
 #ifndef STORE
 #define STORE "sqlite"

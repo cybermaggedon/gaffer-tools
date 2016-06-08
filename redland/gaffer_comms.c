@@ -170,7 +170,9 @@ int gaffer_http_post(gaffer_comms* gc, const char* url,
 	curl_easy_setopt(gc->curl, CURLOPT_READDATA, (void*) up);
 	curl_easy_setopt(gc->curl, CURLOPT_READFUNCTION, &http_upload_callback);
 	curl_easy_setopt(gc->curl, CURLOPT_CUSTOMREQUEST, "POST");
+#ifdef CURLOPT_EXPECT_100_TIMEOUT_MS
 	curl_easy_setopt(gc->curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 1);
+#endif
     } else {
 	curl_easy_setopt(gc->curl, CURLOPT_UPLOAD, 0);
 	curl_easy_setopt(gc->curl, CURLOPT_CUSTOMREQUEST, "GET");
@@ -464,7 +466,8 @@ int gaffer_add_batch(gaffer_comms* gc,
 
     json_object* elts = json_object_new_array();
   
-    for(int i = 0; i < rows; i++) {
+    int i;
+    for(i = 0; i < rows; i++) {
 
 	char* s = batch[i][0].term;
 	char* p = batch[i][1].term;
@@ -593,7 +596,8 @@ gaffer_results* gaffer_relatededge_results_parse(json_object* obj, int spo)
 
     int triples = json_object_array_length(obj);
 
-    for(int i = 0; i < triples; i++) {
+    int i;
+    for(i = 0; i < triples; i++) {
 
 	json_object* jres = json_object_array_get_idx(obj, i);
 	if (jres == 0) continue;
@@ -1345,7 +1349,8 @@ gaffer_results* gaffer_find(gaffer_comms* gc,
 void gaffer_free_results(gaffer_results* gres)
 {
 
-    for(int i = 0; i < gres->count; i++) {
+    int i;
+    for(i = 0; i < gres->count; i++) {
 	free(gres->results[i].s.term);
 	free(gres->results[i].p.term);
 	free(gres->results[i].o.term);

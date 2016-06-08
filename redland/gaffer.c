@@ -336,7 +336,8 @@ librdf_storage_gaffer_add_statements(librdf_storage* storage,
 
 	statement_helper(storage, statement, terms, context_node);
 
-	for(int j = 0; j < 3; j++) {
+	int j;
+	for(j = 0; j < 3; j++) {
 	    batch[rows][j].term = strdup(terms[j].term);
 	    batch[rows][j].type = terms[j].type;
 	}
@@ -347,8 +348,9 @@ librdf_storage_gaffer_add_statements(librdf_storage* storage,
 
 	    gaffer_add_batch(context->comms, batch, rows, 3);
 
-	    for(int i = 0; i < rows; i++)
-		for(int j = 0; j < 3; j++)
+	    int i, j;
+	    for(i = 0; i < rows; i++)
+		for(j = 0; j < 3; j++)
 		    free(batch[i][j].term);
 
 	    rows = 0;
@@ -360,8 +362,9 @@ librdf_storage_gaffer_add_statements(librdf_storage* storage,
     if (rows > 0)
 	gaffer_add_batch(context->comms, batch, rows, 3);
 
-    for(int i = 0; i < rows; i++)
-	for(int j = 0; j < 3; j++)
+    int i, j;
+    for(i = 0; i < rows; i++)
+	for(j = 0; j < 3; j++)
 	    free(batch[i][j].term);
 
     return 0;
