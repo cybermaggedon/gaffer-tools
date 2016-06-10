@@ -1,0 +1,20 @@
+{
+    "edges": {
+	"BasicEdge": {
+	    "properties": {
+		"name": "freq.map"
+	    },
+	    "source": "vertex.string",
+	    "destination": "vertex.string",
+	    "directed": "boolean"
+	}
+    },
+    "entities": {
+	"BasicEntity": {
+	    "properties": {
+	    },
+	    "vertex": "vertex.string"
+	}
+    }
+  }
+}

@@ -1,21 +1,4 @@
 {
-    "edges": {
-	"BasicEdge": {
-	    "properties": {
-		"name": "freq.map"
-	    },
-	    "source": "vertex.string",
-	    "destination": "vertex.string",
-	    "directed": "boolean"
-	}
-    },
-    "entities": {
-	"BasicEntity": {
-	    "properties": {
-	    },
-	    "vertex": "vertex.string"
-	}
-    },
     "types": {
 	"simple.string": {
 	    "position": "VALUE",
@@ -58,11 +41,6 @@
 	    ],
 	    "class": "java.lang.Boolean"
 	}
-    },
-    "vertexSerialiserClass": "gaffer.serialisation.simple.StringSerialiser"
+    }
+  }
 }
-
-
-
-
-
