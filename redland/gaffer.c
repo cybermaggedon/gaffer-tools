@@ -1074,6 +1074,7 @@ librdf_storage_gaffer_context_remove_statement(librdf_storage* storage,
     char* p;
     char* o;
     char* c;
+
     statement_helper(storage, statement, context_node, &s, &p, &o, &c);
 
     int are_spo, filter;
@@ -1081,10 +1082,9 @@ librdf_storage_gaffer_context_remove_statement(librdf_storage* storage,
     
     gaffer_query* qry = gaffer_query_spo(s, p, o, &are_spo, &filter, &path);
 
-    free(s); free(p); free(o); free(c);
-
     gaffer_results* res = gaffer_find(context->comms, path, qry);
     if (res == 0) {
+        free(s); free(p); free(o); free(c);
 	gaffer_query_free(qry);
 	fprintf(stderr, "Query execute failed.\n");
 	exit(1);
@@ -1093,22 +1093,26 @@ librdf_storage_gaffer_context_remove_statement(librdf_storage* storage,
     gaffer_query_free(qry);
 
     if (json_object_array_length(res) < 1) {
+	free(s); free(p); free(o); free(c);
 	gaffer_results_free(res);
 	return -1;
     }
 
     json_object* obj = json_object_array_get_idx(res, 0);
     if (obj == 0) {
+	free(s); free(p); free(o); free(c);
 	gaffer_results_free(res);
 	return -1;
     }
 
     if (!json_object_object_get_ex(obj, "properties", &obj)) {
+	free(s); free(p); free(o); free(c);
 	gaffer_results_free(res);
 	return -1;
     }
 
     if (!json_object_object_get_ex(obj, "name", &obj)) {
+	free(s); free(p); free(o); free(c);
 	gaffer_results_free(res);
 	return -1;
     }
@@ -1116,11 +1120,13 @@ librdf_storage_gaffer_context_remove_statement(librdf_storage* storage,
     if (!json_object_object_get_ex(obj,
 				   "gaffer.function.simple.types.FreqMap",
 				   &obj)) {
+	free(s); free(p); free(o); free(c);
 	gaffer_results_free(res);
 	return -1;
     }
-    
+      
     if (!json_object_object_get_ex(obj, p, &obj)) {
+	free(s); free(p); free(o); free(c);
 	gaffer_results_free(res);
 	return -1;
     }
@@ -1137,6 +1143,8 @@ librdf_storage_gaffer_context_remove_statement(librdf_storage* storage,
 
     /* Create S,P -> O */
     gaffer_add_edge_object(elts, o, s, p, "@n", -weight);
+
+    free(s); free(p); free(o); free(c);
 
     int ret = gaffer_add_elements(context->comms, elts);
 
