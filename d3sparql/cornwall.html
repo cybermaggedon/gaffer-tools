@@ -9,6 +9,20 @@
        font-size: 12px;
        font-family: Helvetica;
     }   
+    th {
+      margin: 4px;
+      padding: 8px;
+      border: 1px solid black;
+    }
+    td {
+      padding: 5px;
+      background: #f8f8e0;
+      border: 1px solid #d8d8c0;
+    }
+    table { 
+      border-spacing: 4px;
+      border-collapse: separate;
+    }
   </style>
 
   <script>
@@ -44,6 +58,22 @@
         } ORDER BY DESC(?employment) \
     ";
     d3sparql.query(endpoint, sparql3, render3);
+
+    var sparql4 = "\
+      SELECT ?ingredient ?quantity \
+      WHERE { \
+        <https://github.com/cybermaggedon/cornwall/pasty> <http://purl.org/ontology/fo/ingredients> ?a . \
+        ?a ?b ?c . \
+        ?c a <http://purl.org/ontology/fo/Ingredient> . \
+        ?c <http://purl.org/dc/elements/1.1/title> ?ingredient . \
+        OPTIONAL { \
+          ?c <http://purl.org/ontology/fo/quantity> ?quantity \
+        } \
+        OPTIONAL { \
+          ?c <http://purl.org/ontology/fo/metric_quantity> ?quantity \
+        } \
+      }";
+    d3sparql.query(endpoint, sparql4, render4);
 
   }
   
@@ -85,6 +115,13 @@
       d3sparql.piechart(json, config);
   }
 
+  function render4(json) {
+     var config = {
+        "selector": "#chart4"
+      };
+      d3sparql.htmltable(json, config);
+  }
+
 </script>
   <style>
   <!-- customize CSS -->
@@ -98,5 +135,7 @@
   <div id="chart2"></div>
   <h2>Employment in Cornwall by Sector</h2>
   <div id="chart3"></div>
- </body>
+  <h2>Cornish pasty ingredients</h2>
+  <div id="chart4"></div>
+  </body>
 </html>
