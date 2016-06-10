@@ -31,6 +31,7 @@
 #include <win32_rdf_config.h>
 #endif
 
+#include <json-c/json.h>
 #include <stdio.h>
 #include <string.h>
 #ifdef HAVE_STDLIB_H
@@ -115,7 +116,8 @@ librdf_storage_gaffer_init(librdf_storage* storage, const char *name,
 	return 1;
     }
   
-    context = LIBRDF_CALLOC(librdf_storage_gaffer_instance*, 1, sizeof(*context));
+    context = LIBRDF_CALLOC(librdf_storage_gaffer_instance*, 1,
+			    sizeof(*context));
     if(!context) {
 	if(options)
 	    librdf_free_hash(options);
@@ -179,72 +181,206 @@ librdf_storage_gaffer_terminate(librdf_storage* storage)
     LIBRDF_FREE(librdf_storage_gaffer_terminate, storage->instance);
 }
 
-static int
-statement_helper(librdf_storage* storage,
-		 librdf_statement* statement,
-		 gaffer_term terms[4],
-		 librdf_node* context_node)
+static
+char* node_helper(librdf_storage* storage, librdf_node* node, char node_type)
 {
-    librdf_node* nodes[4];
-    int i;
-  
-    nodes[0] = statement ? librdf_statement_get_subject(statement) : 0;
-    nodes[1] = statement ? librdf_statement_get_predicate(statement) : 0;
-    nodes[2] = statement ? librdf_statement_get_object(statement) : 0;
-    nodes[3] = context_node;
 
     librdf_uri* uri;
     librdf_uri* dt_uri;
 
-    for(i = 0; i < 4; i++) {
+    const char* integer_type = "http://www.w3.org/2001/XMLSchema#integer";
+    const char* float_type = "http://www.w3.org/2001/XMLSchema#float";
 
-	if (nodes[i] == 0) {
-	    terms[i].term = 0;
-	    terms[i].type = GAFFER_NONE;
-	    continue;
-	}
+    char* name;
+    char data_type;
 
-	const char* integer_type = "http://www.w3.org/2001/XMLSchema#integer";
-	const char* float_type = "http://www.w3.org/2001/XMLSchema#float";
+    switch (librdf_node_get_type(node)) {
+
+    case LIBRDF_NODE_TYPE_RESOURCE:
+	uri = librdf_node_get_uri(node);
+	name = librdf_uri_as_string(uri);
+	data_type = 'u';
+	break;
 	
-	switch (librdf_node_get_type(nodes[i])) {
-	case LIBRDF_NODE_TYPE_RESOURCE:
-	    uri = librdf_node_get_uri(nodes[i]);
-	    terms[i].term = librdf_uri_as_string(uri);
-	    terms[i].type = GAFFER_URI;
-	    break;
-		
-	case LIBRDF_NODE_TYPE_LITERAL:
-	  
-	    dt_uri = librdf_node_get_literal_value_datatype_uri(nodes[i]);
-
-	    if (dt_uri == 0)
-		terms[i].type = GAFFER_STRING;
-	    else {
-		const char* type_uri = librdf_uri_as_string(dt_uri);
-		if (strcmp(type_uri, integer_type) == 0)
-		    terms[i].type = GAFFER_INTEGER;
-		else if (strcmp(type_uri, float_type) == 0)
-		    terms[i].type = GAFFER_FLOAT;
-		else
-		    terms[i].type = GAFFER_STRING;
-	    }
-
-	    terms[i].term = librdf_node_get_literal_value(nodes[i]);
-	    break;
-		
-	case LIBRDF_NODE_TYPE_BLANK:
-	    terms[i].term = librdf_node_get_blank_identifier(nodes[i]);
-	    terms[i].type = GAFFER_BLANK;
-	    break;
-
-	case LIBRDF_NODE_TYPE_UNKNOWN:
-	    break;
+    case LIBRDF_NODE_TYPE_LITERAL:
+	dt_uri = librdf_node_get_literal_value_datatype_uri(node);
+	if (dt_uri == 0)
+	    data_type = 's';
+	else {
+	    const char* type_uri = librdf_uri_as_string(dt_uri);
+	    if (strcmp(type_uri, integer_type) == 0)
+		data_type = 'i';
+	    else if (strcmp(type_uri, float_type) == 0)
+		data_type = 'f';
+	    else
+		data_type = 's';
 	}
+	name = librdf_node_get_literal_value(node);
+	break;
 
+    case LIBRDF_NODE_TYPE_BLANK:
+	name = librdf_node_get_blank_identifier(node);
+	data_type = 'b';
+	break;
+
+    case LIBRDF_NODE_TYPE_UNKNOWN:
+	break;
+	
     }
 
-    return 0;
+    char* term = malloc(5 + strlen(name));
+    if (term == 0) {
+	fprintf(stderr, "malloc failed");
+	return 0;
+    }
+    
+    sprintf(term, "%c:%c:%s", node_type, data_type, name);
+
+    return term;
+
+}
+
+
+static int
+statement_helper(librdf_storage* storage,
+		 librdf_statement* statement,
+		 librdf_node* context,
+		 char** s, char** p, char** o, char** c)
+{
+
+    librdf_node* sn = librdf_statement_get_subject(statement);
+    librdf_node* pn = librdf_statement_get_predicate(statement);
+    librdf_node* on = librdf_statement_get_object(statement);
+
+    if (sn)
+	*s = node_helper(storage, sn, 'n');
+    else
+	*s = 0;
+    
+    if (pn)
+	*p = node_helper(storage, pn, 'r');
+    else
+	*p = 0;
+
+    if (on)
+	*o = node_helper(storage, on, 'n');
+    else
+	*o = 0;
+
+    if (context)
+	*c = node_helper(storage, context, 'c');
+    else
+	*c = 0;
+
+}
+
+
+static gaffer_query* gaffer_query_(const char* s, const char* p, const char* o,
+				   int* spo, int* filter, char** path)
+{
+    *spo = 0;
+    *filter = 1;
+    *path = "graph/doOperation";
+    gaffer_query* qry = gaffer_create_query();
+    gaffer_configure_range_query(qry, "n:", "n;");
+    return qry;
+}
+
+static gaffer_query* gaffer_query_s(const char* s, const char* p, const char* o,
+				    int* spo, int* filter, char** path)
+{
+    *spo = 0;
+    *filter = 1;
+    *path = "graph/doOperation/get/edges/related";
+    gaffer_query* qry = gaffer_create_query();
+    gaffer_configure_relationship_filter_view(qry);
+    gaffer_configure_entity_seed(qry, s);
+    json_object_object_add(qry, "includeIncomingOutGoing",
+			   json_object_new_string("OUTGOING"));
+    return qry;
+}
+
+static gaffer_query* gaffer_query_p(const char* s, const char* p, const char* o,
+				    int* spo, int* filter, char** path)
+{
+    *spo = 1;
+    *filter = 1;
+    *path = "graph/doOperation/get/edges/related";
+    gaffer_query* qry = gaffer_create_query();
+    gaffer_configure_entity_seed(qry, p);
+    json_object_object_add(qry, "includeIncomingOutGoing",
+			   json_object_new_string("INCOMING"));
+    return qry;
+}
+
+static gaffer_query* gaffer_query_o(const char* s, const char* p, const char* o,
+				    int* spo, int* filter, char** path)
+{
+    *spo = 0;
+    *filter = 1;
+    *path = "graph/doOperation/get/edges/related";
+    gaffer_query* qry = gaffer_create_query();
+    gaffer_configure_entity_seed(qry, o);
+    json_object_object_add(qry, "includeIncomingOutGoing",
+			   json_object_new_string("INCOMING"));
+    return qry;
+}
+
+static gaffer_query* gaffer_query_sp(const char* s, const char* p,
+				     const char* o, int* spo, int* filter,
+				     char** path)
+{
+    *spo = 1;
+    *filter = 1;
+    *path = "graph/doOperation/get/edges/related";
+    gaffer_query* qry = gaffer_create_query();
+    gaffer_configure_edge_seeds(qry, s, p);
+    json_object_object_add(qry, "includeIncomingOutGoing",
+			   json_object_new_string("INCOMING"));
+    return qry;
+}
+
+static gaffer_query* gaffer_query_so(const char* s, const char* p,
+				     const char* o,
+				     int* spo, int* filter, char** path)
+{
+    *spo = 1;
+    *filter = 1;
+    *path = "graph/doOperation/get/edges/related";
+    gaffer_query* qry = gaffer_create_query();
+    gaffer_configure_entity_seed(qry, s);
+    gaffer_configure_edge_filter_view(qry, o);
+    json_object_object_add(qry, "includeIncomingOutGoing",
+			   json_object_new_string("OUTGOING"));
+    return qry;
+}
+
+static gaffer_query* gaffer_query_po(const char* s, const char* p,
+				     const char* o,
+				     int* spo, int* filter, char** path)
+{
+    *spo = 0;
+    *filter = 1;
+    *path = "graph/doOperation/get/edges/related";
+    gaffer_query* qry = gaffer_create_query();
+    gaffer_configure_entity_seed(qry, o);
+    gaffer_configure_edge_filter_view(qry, p);
+    json_object_object_add(qry, "includeIncomingOutGoing",
+			   json_object_new_string("INCOMING"));
+    return qry;
+}
+
+static gaffer_query* gaffer_query_spo(const char* s, const char* p,
+				      const char* o,
+				      int* spo, int* filter, char** path)
+{
+    *spo = 0;
+    *filter = 1;
+    *path = "graph/doOperation/get/edges/related";
+    gaffer_query* qry = gaffer_create_query();
+    gaffer_configure_edge_seeds(qry, s, o);
+    gaffer_configure_edge_filter_view(qry, p);
+    return qry;
 }
   
 static int
@@ -287,17 +423,46 @@ librdf_storage_gaffer_close(librdf_storage* storage)
     return 0;
 }
 
-
 static int
 librdf_storage_gaffer_size(librdf_storage* storage)
 {
+
     librdf_storage_gaffer_instance* context =
 	(librdf_storage_gaffer_instance*) storage->instance;
 
-    return gaffer_size(context->comms);
+    int are_spo;
+    int filter;
+    char* path;
+
+    gaffer_query* qry = gaffer_query_(0, 0, 0, &are_spo, &filter, &path);
+
+    gaffer_results* res = gaffer_find(context->comms, path, qry);
+    if (res == 0) {
+	fprintf(stderr, "Query execute failed.\n");
+	exit(1);
+    }
+
+    gaffer_query_free(qry);
+
+    gaffer_results_iterator* iter = gaffer_iterator_create(res);
+
+    int count = 0;
+    
+    while (!gaffer_iterator_done(iter)) {
+	const char* a, * b, * c;
+    
+	gaffer_iterator_get(iter, &a, &b, &c);
+
+	if ((b[0] != '@') && (c[0] != '@'))
+	    count++;
+	gaffer_iterator_next(iter);
+    }
+
+    gaffer_iterator_free(iter);
+
+    return count;
 
 }
-
 
 static int
 librdf_storage_gaffer_add_statement(librdf_storage* storage, 
@@ -315,10 +480,10 @@ librdf_storage_gaffer_add_statements(librdf_storage* storage,
     librdf_storage_gaffer_instance* context;
     context = (librdf_storage_gaffer_instance*)storage->instance;
 
-    gaffer_term batch[GAFFER_BATCH_SIZE][3];
+    gaffer_elements* elts;
+    elts = gaffer_elements_create();
 
-    gaffer_term terms[4];
-    
+    const int batch_size = 1000;
     int rows = 0;
 
     for(; !librdf_stream_end(statement_stream);
@@ -334,24 +499,33 @@ librdf_storage_gaffer_add_statements(librdf_storage* storage,
 	    break;
 	}
 
-	statement_helper(storage, statement, terms, context_node);
+	char* s;
+	char* p;
+	char* o;
+	char* c;
+	statement_helper(storage, statement, context_node, &s, &p, &o, &c);
 
-	int j;
-	for(j = 0; j < 3; j++) {
-	    batch[rows][j].term = strdup(terms[j].term);
-	    batch[rows][j].type = terms[j].type;
-	}
+	if (p[0] == '@') continue;
 
-	rows++;
+	gaffer_add_node_object(elts, s); /* S node. */
+	gaffer_add_node_object(elts, p); /* P node. */
+	gaffer_add_node_object(elts, o); /* O node. */
 
-	if (rows >= GAFFER_BATCH_SIZE) {
+	/* Create S,O -> P */
+	gaffer_add_edge_object(elts, p, s, o, "@r");
 
-	    gaffer_add_batch(context->comms, batch, rows, 3);
+	/* Create S,P -> O */
+	gaffer_add_edge_object(elts, o, s, p, "@n");
 
-	    int i, j;
-	    for(i = 0; i < rows; i++)
-		for(j = 0; j < 3; j++)
-		    free(batch[i][j].term);
+	if (s) free(s);
+	if (p) free(p);
+	if (o) free(o);
+
+	if (rows++ > batch_size) {
+    
+	    int ret = gaffer_add_elements(context->comms, elts);
+	    gaffer_elements_free(elts);
+	    elts = gaffer_elements_create();
 
 	    rows = 0;
 
@@ -359,15 +533,14 @@ librdf_storage_gaffer_add_statements(librdf_storage* storage,
 
     }
 
-    if (rows > 0)
-	gaffer_add_batch(context->comms, batch, rows, 3);
+    if (rows > 0) {
+	int ret = gaffer_add_elements(context->comms, elts);
+    }
 
-    int i, j;
-    for(i = 0; i < rows; i++)
-	for(j = 0; j < 3; j++)
-	    free(batch[i][j].term);
-
+    gaffer_elements_free(elts);
+    
     return 0;
+
 }
 
 
@@ -393,7 +566,8 @@ librdf_storage_gaffer_context_contains_statement(librdf_storage* storage,
                                                  librdf_node* context_node,
                                                  librdf_statement* statement)
 {
-    
+
+#ifdef BROKEN
     librdf_storage_gaffer_instance* context;
     context = (librdf_storage_gaffer_instance*)storage->instance;
 
@@ -407,7 +581,7 @@ librdf_storage_gaffer_context_contains_statement(librdf_storage* storage,
 	return -1;
     
     return (count > 0);
-
+#endif
 }
 
 typedef struct {
@@ -419,71 +593,63 @@ typedef struct {
     librdf_node* context;
 
     gaffer_results* results;
-    int row;
+    gaffer_results_iterator* iterator;
+
+    int are_spo;
+    int filter_spo;
 
 } gaffer_results_stream;
 
-// FIXME: Duplicate!!!
 static
-char type_to_char(gaffer_type type)
-{
-    if (type == GAFFER_STRING) return 's';
-    if (type == GAFFER_URI) return 'u';
-    if (type == GAFFER_INTEGER) return 'i';
-    if (type == GAFFER_FLOAT) return 'f';
-    if (type == GAFFER_BLANK) return 'b';
-    if (type == GAFFER_NONE) return 'n';
-}
-
-static
-librdf_node* node_constructor_helper(librdf_world* world, gaffer_term t)
+librdf_node* node_constructor_helper(librdf_world* world, const char* t)
 {
 
     librdf_node* o;
 
-    if (t.type == GAFFER_URI) {
+    if ((strlen(t) < 4) || (t[1] != ':') || (t[3] != ':')) {
+	fprintf(stderr, "node_constructor_helper called on invalid term\n");
+	return 0;
+    }
+
+    if (t[2] == 'u') {
  	o = librdf_new_node_from_uri_string(world,
-					    (unsigned char*) t.term);
+					    (unsigned char*) t + 4);
 	return o;
     }
 
-    if (t.type == GAFFER_STRING) {
+    if (t[2] == 's') {
 	o = librdf_new_node_from_literal(world,
-					 (unsigned char*) t.term, 0, 0);
+					 (unsigned char*) t + 4, 0, 0);
 	return o;
     }
 
 
-    if (t.type == GAFFER_INTEGER) {
+    if (t[2] == 'i') {
 	librdf_uri* dt =
 	    librdf_new_uri(world,
 			   "http://www.w3.org/2001/XMLSchema#integer");
 	if (dt == 0)
 	    return 0;
 
-	o = librdf_new_node_from_typed_literal(world,
-					       t.term,
-					       0, dt);
+	o = librdf_new_node_from_typed_literal(world, t + 4, 0, dt);
 	librdf_free_uri(dt);
 	return o;
     }
     
-    if (t.type == GAFFER_FLOAT) {
+    if (t[2] == 'f') {
 	librdf_uri* dt =
 	    librdf_new_uri(world,
 			   "http://www.w3.org/2001/XMLSchema#float");
 	if (dt == 0)
 	    return 0;
 
-	o = librdf_new_node_from_typed_literal(world,
-					       t.term,
-					       0, dt);
+	o = librdf_new_node_from_typed_literal(world, t + 4, 0, dt);
 	librdf_free_uri(dt);
 	return o;
     }
 
     return librdf_new_node_from_literal(world,
-					(unsigned char*) t.term, 0, 0);
+					(unsigned char*) t + 4, 0, 0);
 
 }
 
@@ -494,30 +660,10 @@ gaffer_results_stream_end_of_stream(void* context)
 
     scontext = (gaffer_results_stream*)context;
 
-    if (scontext->row >= scontext->results->count)
+    gaffer_results_iterator* iter = scontext->iterator;
+
+    if (gaffer_iterator_done(iter))
 	return 1;
-
-    if (scontext->statement) {
-	librdf_free_statement(scontext->statement);
-	scontext->statement = 0;
-    }
-
-    int row = scontext->row;
-
-    gaffer_result* result = scontext->results->results + row;
-    
-    librdf_node* s;
-    s = node_constructor_helper(scontext->storage->world, result->s);
-
-    librdf_node* p;
-    p = node_constructor_helper(scontext->storage->world, result->p);
-
-    librdf_node* o;
-    o = node_constructor_helper(scontext->storage->world, result->o);
-
-    scontext->statement =
-	librdf_new_statement_from_nodes(scontext->storage->world,
-					s, p, o);
 
     return 0;
 
@@ -531,47 +677,68 @@ gaffer_results_stream_next_statement(void* context)
 
     scontext = (gaffer_results_stream*)context;
 
-    scontext->row++;
+    gaffer_iterator_next(scontext->iterator);
 
-    if (scontext->row >= scontext->results->count)
-	return 1;
+    while (!gaffer_iterator_done(scontext->iterator)) {
 
-    if (scontext->statement) {
-	librdf_free_statement(scontext->statement);
-	scontext->statement = 0;
+	const char* a, *b, *c;
+
+	gaffer_iterator_get(scontext->iterator, &a, &b, &c);
+
+	if ((a[0] == '@') || (b[0] == '@') || (c[0] == '@')) {
+	    gaffer_iterator_next(scontext->iterator);
+	    continue;
+	}
+
+	break;
+	    
     }
 
-    int row = scontext->row;
-
-    gaffer_result* result = scontext->results->results + row;
-
-    librdf_node* s;
-    s = node_constructor_helper(scontext->storage->world, result->s);
-
-    librdf_node* p;
-    p = node_constructor_helper(scontext->storage->world, result->p);
-
-    librdf_node* o;
-    o = node_constructor_helper(scontext->storage->world, result->o);
-
-    scontext->statement =
-	librdf_new_statement_from_nodes(scontext->storage->world,
-					s, p, o);
-
     return 0;
-    
+
 }
 
 
 static void*
 gaffer_results_stream_get_statement(void* context, int flags)
 {
-    gaffer_results_stream* scontext;
 
+    gaffer_results_stream* scontext;
+    const char* a;
+    const char* b;
+    const char* c;
+	
     scontext = (gaffer_results_stream*)context;
 
+    gaffer_results_iterator* iter = scontext->iterator;
+
     switch(flags) {
+
     case LIBRDF_ITERATOR_GET_METHOD_GET_OBJECT:
+
+	gaffer_iterator_get(iter, &a, &b, &c);
+
+	if (scontext->statement) {
+	    librdf_free_statement(scontext->statement);
+	    scontext->statement = 0;
+	}
+
+	librdf_node* sn, * pn, * on;
+	sn = node_constructor_helper(scontext->storage->world, a);
+
+	if (scontext->are_spo) {
+	    pn = node_constructor_helper(scontext->storage->world, b);
+	    on = node_constructor_helper(scontext->storage->world, c);
+
+	} else {
+	    pn = node_constructor_helper(scontext->storage->world, c);
+	    on = node_constructor_helper(scontext->storage->world, b);
+	}
+
+	scontext->statement =
+	    librdf_new_statement_from_nodes(scontext->storage->world,
+					    sn, pn, on);
+
 	return scontext->statement;
 
     case LIBRDF_ITERATOR_GET_METHOD_GET_CONTEXT:
@@ -583,12 +750,15 @@ gaffer_results_stream_get_statement(void* context, int flags)
 		   "Unknown iterator method flag %d", flags);
 	return NULL;
     }
+
 }
 
 
 static void
 gaffer_results_stream_finished(void* context)
 {
+
+#ifdef BROKEN
     gaffer_results_stream* scontext;
 
     scontext  = (gaffer_results_stream*)context;
@@ -608,39 +778,65 @@ gaffer_results_stream_finished(void* context)
 	librdf_free_node(scontext->context);
 
     LIBRDF_FREE(librdf_storage_gaffer_find_statements_stream_context, scontext);
+
+#endif
 }
 
 static librdf_stream*
 librdf_storage_gaffer_serialise(librdf_storage* storage)
 {
-    
-    librdf_storage_gaffer_instance* context;
-    gaffer_results_stream* scontext;
-    librdf_stream* stream;
-  
-    context = (librdf_storage_gaffer_instance*) storage->instance;
 
+
+    librdf_storage_gaffer_instance* context =
+	(librdf_storage_gaffer_instance*) storage->instance;
+    
+    context = (librdf_storage_gaffer_instance*)storage->instance;
+
+    gaffer_results_stream* scontext;
+    
     scontext =
-	LIBRDF_CALLOC(gaffer_results_stream*,
-		      1, sizeof(*scontext));
+	LIBRDF_CALLOC(gaffer_results_stream*, 1, sizeof(*scontext));
     if(!scontext)
 	return NULL;
 
     scontext->storage = storage;
     librdf_storage_add_reference(scontext->storage);
 
-    scontext->gaffer_context = context;
+    int are_spo;
+    int filter_spo;
+    char* path;
 
-    gaffer_term s, p, o;
-    s.term = 0;
-    p.term = 0;
-    o.term = 0;
+    gaffer_query* qry = gaffer_query_(0, 0, 0, &are_spo, &filter_spo, &path);
 
-    gaffer_results* gres = gaffer_find(context->comms, s, p, o);
+    gaffer_results* results = gaffer_find(context->comms, path, qry);
+    if (results == 0) {
+	fprintf(stderr, "Query execute failed.\n");
+	exit(1);
+    }
 
-    scontext->results = gres;
-    scontext->row = 0;
+    gaffer_query_free(qry);
 
+    scontext->results = results;
+    scontext->iterator = gaffer_iterator_create(results);
+    scontext->are_spo = are_spo;
+    scontext->filter_spo = filter_spo;
+
+    while (!gaffer_iterator_done(scontext->iterator)) {
+
+	const char* a, *b, *c;
+
+	gaffer_iterator_get(scontext->iterator, &a, &b, &c);
+
+	if ((a[0] == '@') || (b[0] == '@') || (c[0] == '@')) {
+	    gaffer_iterator_next(scontext->iterator);
+	    continue;
+	}
+
+	break;
+	    
+    }
+
+    librdf_stream* stream;
     stream =
 	librdf_new_stream(storage->world,
 			  (void*)scontext,
@@ -656,6 +852,7 @@ librdf_storage_gaffer_serialise(librdf_storage* storage)
     return stream;
 
 }
+
 
 /**
  * librdf_storage_gaffer_find_statements:
@@ -678,8 +875,11 @@ librdf_storage_gaffer_find_statements(librdf_storage* storage,
     librdf_storage_gaffer_instance* context;
     gaffer_results_stream* scontext;
     librdf_stream* stream;
-    gaffer_term terms[4];
-
+    char* s;
+    char* p;
+    char* o;
+    char* c;
+    
     context = (librdf_storage_gaffer_instance*)storage->instance;
 
     scontext =
@@ -692,13 +892,68 @@ librdf_storage_gaffer_find_statements(librdf_storage* storage,
 
     scontext->gaffer_context = context;
 
-    statement_helper(storage, statement, terms, 0);
+    statement_helper(storage, statement, 0, &s, &p, &o, &c);
 
-    gaffer_results* gres = gaffer_find(context->comms,
-				       terms[0], terms[1], terms[2]);
+    int index = 0;
 
-    scontext->results = gres;
-    scontext->row = 0;
+    int are_spo = 0;
+    int filter_spo = 0;
+    char* path;
+    
+    typedef gaffer_query* (*query_function)(const char* s,
+					    const char* p,
+					    const char* o,
+					    int *are_spo,
+					    int *filter_spo,
+					    char** path);
+
+    query_function functions[8] = {
+	&gaffer_query_,		/* ??? */
+	&gaffer_query_s,	/* S?? */
+	&gaffer_query_p,	/* ?P? */
+	&gaffer_query_sp,	/* SP? */
+	&gaffer_query_o,	/* ??O */
+	&gaffer_query_so,	/* S?O */
+	&gaffer_query_po,	/* ?PO */
+	&gaffer_query_spo	/* SPO */
+    };
+
+    /* This creates an index into the function table, depending on input
+       terms. */
+    int num = 0;
+    if (o) num += 4;
+    if (p) num += 2;
+    if (s) num++;
+
+    query_function fn = functions[num];
+    gaffer_query* query = (*fn)((const char*) s,
+				(const char*) p,
+				(const char*) o,
+				&are_spo, &filter_spo, &path);
+
+    gaffer_results* results = gaffer_find(context->comms, path, query);
+
+    gaffer_query_free(query);
+
+    scontext->results = results;
+    scontext->iterator = gaffer_iterator_create(results);
+    scontext->are_spo = are_spo;
+    scontext->filter_spo = filter_spo;
+
+    while (!gaffer_iterator_done(scontext->iterator)) {
+
+	const char* a, *b, *c;
+
+	gaffer_iterator_get(scontext->iterator, &a, &b, &c);
+
+	if ((b[0] == '@') || (c[0] == '@')) {
+	    gaffer_iterator_next(scontext->iterator);
+	    continue;
+	}
+
+	break;
+	    
+    }
 
     stream =
 	librdf_new_stream(storage->world,
@@ -731,21 +986,37 @@ librdf_storage_gaffer_context_add_statement(librdf_storage* storage,
                                             librdf_node* context_node,
                                             librdf_statement* statement) 
 {
-    gaffer_term terms[4];
 
-    // FIXME
-#ifdef DUPLICATE_STATEMENT_CHECKING
-    /* Do not add duplicate statements */
-    if (librdf_storage_gaffer_context_contains_statement(storage, context_node, statement))
-	return 0;
-#endif
+    char* s;
+    char* p;
+    char* o;
+    char* c;
 
-    statement_helper(storage, statement, terms, context_node);
+    statement_helper(storage, statement, context_node, &s, &p, &o, &c);
 
     librdf_storage_gaffer_instance* context; 
     context = (librdf_storage_gaffer_instance*)storage->instance;
 
-    int ret = gaffer_add(context->comms, terms[0], terms[1], terms[2]);
+    gaffer_elements* elts = gaffer_elements_create(context->comms);
+
+    gaffer_add_node_object(elts, s); /* S node. */
+    gaffer_add_node_object(elts, p); /* P node. */
+    gaffer_add_node_object(elts, o); /* O node. */
+
+    /* Create S,O -> P */
+    gaffer_add_edge_object(elts, p, s, o, "@r");
+
+    /* Create S,P -> O */
+    gaffer_add_edge_object(elts, o, s, p, "@n");
+
+    if (s) free(s);
+    if (p) free(p);
+    if (o) free(o);
+
+    int ret = gaffer_add_elements(context->comms, elts);
+
+    gaffer_elements_free(elts);
+
     if (ret < 0)
 	return -1;
 
@@ -769,6 +1040,7 @@ librdf_storage_gaffer_context_remove_statement(librdf_storage* storage,
                                                librdf_node* context_node,
                                                librdf_statement* statement) 
 {
+#ifdef IS_BROKEN
     gaffer_term terms[4];
 
     statement_helper(storage, statement, terms, context_node);
@@ -781,7 +1053,7 @@ librdf_storage_gaffer_context_remove_statement(librdf_storage* storage,
 	return -1;
 
     return 0;
-
+#endif
 }
 
 
@@ -881,6 +1153,8 @@ librdf_storage_gaffer_get_feature(librdf_storage* storage, librdf_uri* feature)
 static int
 librdf_storage_gaffer_transaction_start(librdf_storage *storage)
 {
+
+  printf("TRANSACTION START\n");
 
     //FIXME: Not implemented.  Would need to batch stuff up, into single REST
     // call.

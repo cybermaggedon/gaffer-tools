@@ -3,7 +3,6 @@
 #include <redland.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdexcept>
 
 #ifndef STORE
 #define STORE "sqlite"
@@ -33,6 +32,9 @@ const std::string query_string6 =
 
 const std::string query_string7 =
     "ASK { <http://gaffer.test/#fred> <http://gaffer.test/#is_a> <http://gaffer.test/#cat> . }";
+
+const std::string query_string8 =
+    "CONSTRUCT { ?a ?b ?c . } WHERE { ?a ?b ?c . }";
 
 void output_node(librdf_node* n)
 {
@@ -301,7 +303,7 @@ int main(int argc, char** argv)
 	librdf_stream* strm = librdf_model_as_stream(mmodel);
 	if (strm == 0)
 	    throw std::runtime_error("Couldn't get memory stream");
-
+	
 	int ret = librdf_model_add_statements(model, strm);
 	if (ret != 0)
 	    throw std::runtime_error("Couldn't add_statements");
@@ -312,6 +314,7 @@ int main(int argc, char** argv)
 	/* Run queries                                                       */
 	/*********************************************************************/
 
+	run_query(world, model, query_string8);
 	run_query(world, model, query_string1);
 	run_query(world, model, query_string2);
 	run_query(world, model, query_string3);
