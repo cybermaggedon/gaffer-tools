@@ -170,15 +170,42 @@ print results
 
 ## SPARQL endpoint
 
-### Running the service
+SPARQL defines a protocol which can be used to execute SPARQL queries
+remotely.  An implementation of the SPARQL protocol is called a SPARQL
+endpoint.
 
-SPARQL defines a protocol which can be used to execute SPARQL queries remotely.  This is interesting for us, because a number of products know how to use a SPARQL endpoint and would be easy to integrate.
+This is interesting for us, because a number of products
+know how to use a SPARQL endpoint and would be easy to integrate.
 
-Now we have RDF in Python, a bit of Python easily provides the SPARQL endpoint.  Look in the `sparql` directory, and run:
+The source code tree contains not ONE, but TWO SPARQL endpoint services.
+
+These are fairly simple - they rely on Redland to do the SPARQL querying,
+so they are just a lightweight HTTP wrapper on Redland.
+
+### The Python service
+
+Now we have RDF in Python, a bit of Python easily provides the SPARQL
+endpoint.  Look in the `sparql` directory, and run:
+
 ```
 ./sparql_service
 ```
-This runs a SPARQL service on `http://localhost:8081/sparql`.
+
+This runs a SPARQL service on `http://localhost:8081/sparql`.  The Python
+implementation seems to be unreliable, and will segfault after a period of
+time for a reason I can't work out.
+
+### The C++ version
+
+Also in the `sparql` directory, run `make` to build.  Uses `libmicrohttpd`
+as the web server, so you should install a package called `libmicrohttp-devel`.
+
+Run it:
+```
+./sparql 8081
+```
+and you have a SPARQL endpoint on port 8081.  I'll probably bin the Python
+version once I'm happy the C++ is good enough.
 
 ### Interacting with the SPARQL endpoint
 
@@ -193,11 +220,9 @@ In the gaffer-tools source is a data set I created from data on Wikipedia
 and Cornwall County Council site: `cornwall.ttl`.  It's in turtle format.
 
 Before loading it into Gaffer, now would be a good time to clear out the
-database, the easiest way to do that is to stop the GafferEntryPoint
-process.  Ctrl-C, and restart:
-```
-java GafferEntryPoint
-```
+database, the easiest way to do that is to stop and start the Gaffer
+REST API.  Ctrl-C, and restart:
+
 Now, to load the Cornwall data set...
 ```
 # Load the data
