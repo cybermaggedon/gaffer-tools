@@ -19,7 +19,7 @@
     var sparql1 = "\
       SELECT ?place ?population \
       WHERE { \
-        ?rsrc <http://gaffer.test/#town-population> ?population . \
+        ?rsrc <https://github.com/cybermaggedon/#town-population> ?population . \
         ?rsrc <http://purl.org/dc/elements/1.1/title> ?place . \
         } ORDER BY DESC(?population) LIMIT 20 \
     ";
@@ -28,11 +28,22 @@
     var sparql2 = "\
       SELECT ?place ?population \
       WHERE { \
-        ?rsrc <http://gaffer.test/#town-population> ?population . \
+        ?rsrc <https://github.com/cybermaggedon/#town-population> ?population . \
         ?rsrc <http://purl.org/dc/elements/1.1/title> ?place . \
         } ORDER BY DESC(?population) LIMIT 15 \
     ";
     d3sparql.query(endpoint, sparql2, render2);
+
+    var sparql3 = "\
+      SELECT ?sector ?employment \
+      WHERE { \
+        <https://github.com/cybermaggedon/cornwall/employment/2016> ?a ?employment . \
+        ?a a <http://www.w3.org/2000/01/rdf-schema#Property> . \
+        ?a <http://purl.org/dc/elements/1.1/title> ?sector . \
+        FILTER ( ?employment > 5 ) \
+        } ORDER BY DESC(?employment) \
+    ";
+    d3sparql.query(endpoint, sparql3, render3);
 
   }
   
@@ -62,6 +73,18 @@
       d3sparql.piechart(json, config);
   }
 
+  function render3(json) {
+     var config = {
+        "label": "sector",
+	"size": "employment",
+	"width": 400,
+	"height": 400,
+        "hole":  50,
+        "selector": "#chart3"
+      };
+      d3sparql.piechart(json, config);
+  }
+
 </script>
   <style>
   <!-- customize CSS -->
@@ -73,5 +96,7 @@
   <div id="chart1"></div>
   <h2>Most populous towns - pie chart</h2>
   <div id="chart2"></div>
+  <h2>Employment in Cornwall by Sector</h2>
+  <div id="chart3"></div>
  </body>
 </html>

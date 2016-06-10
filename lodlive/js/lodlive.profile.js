@@ -40,7 +40,7 @@ $.jStorage.set('profile', {
 		},
 
 		/*matching all the requested URIs*/
-		'http://gaffer.test' : {
+		'https://github.com/cybermaggedon/' : {
 			description : {
 				en : 'just a test'
 			},
@@ -49,10 +49,10 @@ $.jStorage.set('profile', {
 			endpoint : 'http://localhost:8081/sparql',
 			examples : [{
 				label : 'Fowey',
-				uri : 'http://gaffer.test/cornwall/Fowey'
+				uri : 'https://github.com/cybermaggedon/cornwall/Fowey'
 			}, {
 				label : 'Cornwall',
-				uri : 'http://gaffer.test/cornwall'
+				uri : 'https://github.com/cybermaggedon/cornwall'
 			}]
 		}
 	},

@@ -1,4 +1,5 @@
-@base <http://gaffer.test/> .
+
+@base <https://github.com/cybermaggedon/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix dbpedia: <http://dbpedia.org/> .
 @prefix fo: <http://purl.org/ontology/fo/> .
@@ -401,7 +402,7 @@
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-4.885"^^<http://www.w3.org/2001/XMLSchema#float> .
 
 <cornwall/pasty>
-    <http://dbpedia.org/ontology/thumbnail> <https://en.wikipedia.org/wiki/Pasty#/media/File:Cornish_pasty.jpeg> ;
+    <http://dbpedia.org/ontology/thumbnail> <https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Cornish_pasty.jpeg/1280px-Cornish_pasty.jpeg> ;
     <http://dbpedia.org/ontology/wikiPageExternalLink> <https://en.wikipedia.org/wiki/Pasty#Cornish_pasty> ;
     <http://www.w3.org/2002/07/owl#sameAs> <http://dbpedia.org/resource/Pasty> ;
     <http://purl.org/dc/elements/1.1/title> "Cornish pasty" ;
@@ -411,6 +412,7 @@
 
 <cornwall/pasty_ingredients>
     a fo:IngredientList ;
+    <http://purl.org/dc/elements/1.1/title> "Cornish pasty ingredients" ;
     rdf:_1 <cornwall/pasty_ingredients/butter> ;
     rdf:_2 <cornwall/pasty_ingredients/lard> ;
     rdf:_3 <cornwall/pasty_ingredients/flour> ;
@@ -465,3 +467,89 @@
     a fo:Ingredient ;
     <http://purl.org/dc/elements/1.1/title> "1 tbsp ground black pepper" .
 
+<cornwall/year/2015>
+    a <cornwall/#analysis-year-point> ;
+    <cornwall/#nvq4plus-p> "29.4"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#nvq3-p> "21.5"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#nvq2-p> "19.2"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#nvq1-p> "29.4"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#apprentice-p> "4.5"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#unqualified-p> "6.0"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<cornwall/year/2014>
+    a <cornwall/#analysis-year-point> ;
+    <cornwall/#nvq4plus-p> "32.6"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#nvq3-p> "19.0"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#nvq2-p> "19.8"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#nvq1-p> "12.4"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#apprentice-p> "4.5"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#unqualified-p> "6.0"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<cornwall/employment/2016>
+    a <cornwall/#analysis-year-point> ;
+    <cornwall/#agriculture-p> "4.0"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#mining-p> "0.7"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#manufacturing-p> "8.8"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#utilities-p> "0.2"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#construction-p> "7.1"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#distribution-p> "6.3"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#retailing-p> "13.0"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#hotels-catering-p> "11.1"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#transport-p> "0.9"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#banking-finance-bus-p> "13.0"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#public-admin-defence-p> "5.8"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#education-p> "8.7"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#health-social-p> "10.9"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <cornwall/#misc-services-p> "6.0"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<cornwall/#agriculture-p>
+    <http://purl.org/dc/elements/1.1/title> "Agriculture %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#mining-p>
+    <http://purl.org/dc/elements/1.1/title> "Mining %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#manufacturing-p>
+    <http://purl.org/dc/elements/1.1/title> "Manufacturing %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#utilities-p>
+    <http://purl.org/dc/elements/1.1/title> "Utilities supply %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#construction-p>
+    <http://purl.org/dc/elements/1.1/title> "Construction %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#distribution-p>
+    <http://purl.org/dc/elements/1.1/title> "Distribution %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#retailing-p>
+    <http://purl.org/dc/elements/1.1/title> "Retail %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#hotels-catering-p>
+    <http://purl.org/dc/elements/1.1/title> "Hotels and Catering %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#transport-p>
+    <http://purl.org/dc/elements/1.1/title> "Transport %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#banking-finance-bus-p>
+    <http://purl.org/dc/elements/1.1/title> "Banking, Finance and Business Services %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#education-p>
+    <http://purl.org/dc/elements/1.1/title> "Education %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#health-social-p>
+    <http://purl.org/dc/elements/1.1/title> "Health and Social Work %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .
+
+<cornwall/#misc-services-p>
+    <http://purl.org/dc/elements/1.1/title> "Miscellaneous Services %" ;
+    a <http://www.w3.org/2000/01/rdf-schema#Property> .

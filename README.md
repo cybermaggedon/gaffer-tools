@@ -2,7 +2,8 @@
 # Getting tooled up to use Gaffer
 
 This page describes a set of alpha-quality tools I'm playing with to get working
-with the Gaffer graph database.
+with the Gaffer graph database.  My interest is linked data / RDF, and using
+linked data visualisation.
 
 ## Compiling Gaffer
 
@@ -11,56 +12,32 @@ This is covered in
 check out the `develop` branch and run:
 
 ```
-mvn clean package
+mvn clean package install
 ```
-I have this working with git revision `e65b146cf38026ebe66f48444ea716ba6b137fd3`.
+I have this working with git revision
+`35010869cae9a246e064a2be2fd568b7a32d06b9`
 
 ## The REST interface
 
 ### Starting the REST interface
 
-Gaffer's REST interface is mostly there, it just needs some packaging work, and
-this is happening on a development branch.  In the interim I've got a simple
-REST interface by embedding Gaffer into a Python web server using py4j.  This
-implements a small subset of the REST API.  It uses Gaffer's JSON serialisers
-and deserialisers, so should be interface-compatible with the REST API when
-it is released.
+Gaffer has a REST interface which can be integrated with your
+favourite web server, but for experimenting the stand-alone web service
+can be easily started from the command line.
 
-This is not a production solution, and it won't perform or scale: The Python
-aseHTTPServer class is single-threaded.
+To use it, you need to feed it my data schema.  So, you need to copy
+`dataSchema.json` and `dataTypes.json` from my source directory
+`gaffer-schema` into your `gaffer` source directory at
+`example-rest/src/main/resources/schema`.
 
-This is in the `rest-api` directory.  Components are:
-* The `GafferEntryPoint` Java class instantiates the Gaffer store.  It is invoked through *py4j*.
-* A Python wrapper which hosts the web-server and invokes Gaffer operations through the *py4j* interface.
-* The `schema.json` configuration file defines the Gaffer schema.  It contains a configuration we'll use to store RDF later.
-* The `store.properties` configuration file defines the Gaffer store.  This is configured to run a `MockAccumuloStore`, but changing this configuration would permit using a real Accumulo store.
+Then in the Gaffer source tree, go into the `example-rest` directory and
+run:
 
-To get this up and running:
+```
+mvn install -P standalone
+```
 
-1. First step is to assemble a `CLASSPATH` variable.  If it's any help, the 
-   `env` file I've put in the directory will work for you.  If not, you're
-   on your own.
-   ```
-   . ./env
-   ```
-
-2. Compile the `GafferEntryPoint` class:
-   ```
-   javac GafferEntryPoint.java
-   ```
-
-3. Run the `GafferEntryPoint` class:
-   ```
-   java GafferEntryPoint
-   ```
-   If it works, it doesn't return. This starts the Gaffer storage in that Java process.  You may get a warning about Hadoop NativeCodeLoader not working.  Seems safe to ignore this warning.
-
-4. Run the Python service wrapper:
-   ```
-   ./service
-   ```
-   
-   If both of those are running, you have a Gaffer with a REST API on port 8080.
+Some compiling occurs, and then the REST API starts on port 8080.
 
 ### Testing the REST interface
 
@@ -140,16 +117,21 @@ If you got this far without errors, you have a Gaffer store running, with a few 
 
 You can dump out the edges:
 ```
-rdfproc -s gaffer http://localhost:8080/ print
+rdfproc -s gaffer http://localhost:8080/example-rest/v1 print
 ```
 And run a SPARQL query:
 ```
-rdfproc -s gaffer http://localhost:8080/ query sparql - 'SELECT ?a ?b ?c WHERE { ?a ?b ?c . }'
+rdfproc -s gaffer http://localhost:8080/example-rest/v1 query sparql - 'SELECT ?a ?b ?c WHERE { ?a ?b ?c . }'
 ```
 
 A more complex query:
 ```
-rdfproc -s gaffer http://localhost:8080/ query sparql - 'SELECT ?a WHERE { <http://gaffer.test/number#3>  <http://gaffer.test/number#is_before> ?b . ?b <http://gaffer.test/number#is_before> ?a . }'
+rdfproc -s gaffer http://localhost:8080/example-rest/v1 query sparql - \
+   'SELECT ?a
+    WHERE {
+      <http://gaffer.test/number#3> <http://gaffer.test/number#is_before> ?b .
+      ?b <http://gaffer.test/number#is_before> ?a .
+    }'
 ```
 
 ### Redland Python API
@@ -167,7 +149,8 @@ node2=RDF.Node(uri_string="http://ex.org/#name")
 node3=RDF.Node(literal="Lion")
 statement=RDF.Statement(node1, node2, node3)
 
-storage=RDF.Storage(storage_name="gaffer", name="http://localhost:8080",
+storage=RDF.Storage(storage_name="gaffer",
+	name="http://localhost:8080/example-rest/v1",
         options_string="")
 model=RDF.Model(storage)
 
@@ -207,7 +190,7 @@ roqet -p http://localhost:8081/sparql -e 'SELECT ?a ?b ?c WHERE { ?a ?b ?c . }'
 ## Loading some real data
 
 In the gaffer-tools source is a data set I created from data on Wikipedia
-and Cornwall County Council site: `cornwall.n`.
+and Cornwall County Council site: `cornwall.ttl`.  It's in turtle format.
 
 Before loading it into Gaffer, now would be a good time to clear out the
 database, the easiest way to do that is to stop the GafferEntryPoint
@@ -217,21 +200,19 @@ java GafferEntryPoint
 ```
 Now, to load the Cornwall data set...
 ```
-# Convert n-triples to RDF/XML
-rapper -o rdfxml -i ntriples cornwall.n > cornwall.rdf
-
 # Load the data
-rdfproc -s gaffer http://localhost:8080/ parse cornwall.rdf
+rdfproc -s gaffer http://localhost:8080/example-rest/v1 parse cornwall.ttl \
+	turtle
 ```
 Dump the data set to check it's there...
 ```
-rdfproc -s gaffer http://localhost:8080/ print
+rdfproc -s gaffer http://localhost:8080/example-rest/v1 print
 ```
 And run a SPARQL query for the fun of it...
 ```
 roqet -p http://localhost:8081/sparql -e '
   SELECT ?b ?c
-  WHERE { <http://gaffer.test/cornwall/#Fowey> ?b ?c . }'
+  WHERE { <https://github.com/cybermaggedon/cornwall/Fowey> ?b ?c . }'
 ```
 
 ## Visualising the data

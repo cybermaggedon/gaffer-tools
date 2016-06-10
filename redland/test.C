@@ -310,6 +310,10 @@ int main(int argc, char** argv)
 
 	librdf_free_stream(strm);
 
+	librdf_free_model(mmodel);
+
+	librdf_free_storage(mstorage);
+
 	/*********************************************************************/
 	/* Run queries                                                       */
 	/*********************************************************************/
@@ -323,6 +327,14 @@ int main(int argc, char** argv)
 	run_query(world, model, query_string6);
 	run_query2(world, model, query_string7);
 
+	/*********************************************************************/
+	/* Remove statement                                                  */
+	/*********************************************************************/
+
+	std::cout << "** Remove statements" << std::endl;
+
+	librdf_model_remove_statement(model, st);
+	
 	/*********************************************************************/
 	/* Serialise                                                         */
 	/*********************************************************************/
@@ -351,19 +363,15 @@ int main(int argc, char** argv)
 
 	free(out);
 
+	librdf_free_stream(strm);
+
 	librdf_free_serializer(srl);
-	
-	/*********************************************************************/
-	/* Remove statement                                                  */
-	/*********************************************************************/
-
-	std::cout << "** Remove statements" << std::endl;
-
-	librdf_model_remove_statement(model, st);
 	
 	/*********************************************************************/
 	/* Cleanup                                                           */
 	/*********************************************************************/
+
+	librdf_free_statement(st);
 
 	librdf_free_model(model);
 

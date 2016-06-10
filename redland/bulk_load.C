@@ -11,7 +11,7 @@
 #endif
 
 #ifndef STORE_NAME
-#define STORE_NAME "http://localhost:8080/"
+#define STORE_NAME "http://localhost:8080/example-rest/v1"
 #endif
 
 int main(int argc, char** argv)
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 	librdf_new_uri(world, (const unsigned char*) "http://bunchy.org");
 
     // Get RDF parser.
-    librdf_parser* parser = librdf_new_parser(world, 0, 0, 0);
+    librdf_parser* parser = librdf_new_parser(world, "turtle", 0, 0);
     if (parser == 0) {
 	fprintf(stderr, "Couldn't create RDF parser.\n");
 	exit(1);

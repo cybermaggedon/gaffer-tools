@@ -235,13 +235,9 @@ int gaffer_test(gaffer_comms* gc)
 
 }
 
-void gaffer_add_node_object(gaffer_elements* obj, const char* node)
-{
-    // We can get by with just edges.  Do nothing.
-}
-
 void gaffer_add_edge_object(gaffer_elements* obj, const char* edge,
-			    const char* src, const char* dest, const char* type)
+			    const char* src, const char* dest, const char* type,
+			    int weight)
 {
 
     json_object* elts;
@@ -256,7 +252,7 @@ void gaffer_add_edge_object(gaffer_elements* obj, const char* edge,
     json_object* namep = json_object_new_object();
 
     json_object* namefm = json_object_new_object();
-    json_object_object_add(namefm, edge, json_object_new_int(1));
+    json_object_object_add(namefm, edge, json_object_new_int(weight));
     json_object_object_add(namefm, type, json_object_new_int(1));
     
     json_object_object_add(namep,
@@ -362,5 +358,10 @@ gaffer_results* gaffer_find(gaffer_comms* gc, const char* path,
 
     return obj;
 
+}
+
+void gaffer_results_free(gaffer_results* results)
+{
+    json_object_put(results);
 }
 

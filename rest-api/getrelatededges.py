@@ -1,4 +1,5 @@
-import urllib2
+
+import requests
 
 data = """
 {
@@ -32,9 +33,11 @@ data = """
 }
 """
 
-req = urllib2.Request('http://localhost:8080/graph/doOperation/get/edges/related')
-response = urllib2.urlopen(req, data)
-result = response.read()
+url = 'http://localhost:8080/example-rest/v1/graph/doOperation/get/edges/related'
 
-print result
+response = requests.post(url, data,
+                         headers={'content-type': 'application/json'})
+
+print "Status:",response.status_code
+print response.text
 

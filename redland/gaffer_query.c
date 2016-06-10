@@ -371,13 +371,25 @@ int gaffer_iterator_done(gaffer_results_iterator* iter)
 }
 
 int gaffer_iterator_get(gaffer_results_iterator* iter,
-			const char** src, const char** dest, const char** prop)
+			const char** src, const char** dest, const char** prop,
+			int* val)
 {
     if (iter->current == 0) return -1;
 
     *src = iter->source;
     *dest = iter->dest;
     *prop = iter->property->k;
+
+    json_object* obj = (json_object*) iter->property->v;
+
+    /* Shouldn't happen. */
+    if (obj == 0) {
+      *val = 0;
+    } else {
+      *val = json_object_get_int(obj);
+    }
+
+    return 0;
 
 }
 

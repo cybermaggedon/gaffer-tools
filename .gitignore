@@ -1,0 +1,8 @@
+*.o
+*.so
+cornwall.rdf
+redland/test-gaffer
+redland/test-sqlite
+redland/bulk_load
+sparql/sparql
+*~

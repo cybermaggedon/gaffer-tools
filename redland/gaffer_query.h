@@ -37,7 +37,7 @@ typedef struct {
 
 gaffer_results_iterator* gaffer_iterator_create(gaffer_results*);
 int gaffer_iterator_done(gaffer_results_iterator*);
-int gaffer_iterator_get(gaffer_results_iterator*, const char**, const char**, const char**);
+int gaffer_iterator_get(gaffer_results_iterator*, const char**, const char**, const char**, int* val);
 void gaffer_iterator_next(gaffer_results_iterator*);
 
 void gaffer_iterator_free(gaffer_results_iterator*);

@@ -8,7 +8,8 @@ import urlparse
 import xml.etree.ElementTree as ElementTree
 import sys
 
-storage = RDF.Storage(storage_name="gaffer", name="http://localhost:8080",
+storage = RDF.Storage(storage_name="gaffer",
+                      name="http://localhost:8080/example-rest/v1",
                       options_string="")
 
 model = RDF.Model(storage)

@@ -7,7 +7,7 @@ SQLITE_FLAGS=-DSTORE=\"sqlite\" -DSTORE_NAME=\"STORE.db\"
 
 GAFFER_FLAGS=-DSTORE=\"gaffer\" -DSTORE_NAME=\"http://localhost:8080/example-rest/v1\"
 
-all: test-sqlite test-gaffer librdf_storage_gaffer.so
+all: test-sqlite test-gaffer librdf_storage_gaffer.so bulk_load
 
 test-sqlite: test-sqlite.o
 	${CXX} ${CXXFLAGS} test-sqlite.o -o $@ ${LIBS}
@@ -15,15 +15,14 @@ test-sqlite: test-sqlite.o
 test-gaffer: test-gaffer.o
 	${CXX} ${CXXFLAGS} test-gaffer.o -o $@ ${LIBS}
 
+bulk_load: bulk_load.o
+	${CXX} ${CXXFLAGS} bulk_load.o -o $@ ${LIBS}
+
 test-sqlite.o: test.C
 	${CXX} ${CXXFLAGS} -c $< -o $@  ${SQLITE_FLAGS}
 
 test-gaffer.o: test.C
 	${CXX} ${CXXFLAGS} -c $< -o $@ ${GAFFER_FLAGS}
-
-mytest: mytest.o gaffer_comms.o gaffer_query.o
-	${CC} ${CFLAGS} mytest.o gaffer_comms.o gaffer_query.o \
-		-ljson-c -lcurl -o $@
 
 GAFFER_OBJECTS=gaffer.o gaffer_comms.o gaffer_query.o
 
@@ -43,6 +42,4 @@ depend:
 
 gaffer.o: ./gaffer_comms.h ./gaffer_query.h
 gaffer_comms.o: ./gaffer_comms.h ./gaffer_query.h
-gaffer-comms-test.o: ./gaffer_comms.h ./gaffer_query.h
 gaffer_query.o: ./gaffer_query.h
-mytest.o: ./gaffer_comms.h ./gaffer_query.h
