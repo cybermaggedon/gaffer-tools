@@ -22,27 +22,79 @@ librdf_world* world;
 librdf_model* model;
 librdf_uri* base_uri;
 
-/* HTTP request handler. */
-static int request_handler(void* cls, struct MHD_Connection * connection,
-			   const char * url, const char * method,
-			   const char * version, const char * upload_data,
-			   size_t * upload_data_size, void ** ptr)
-{
-    
-    struct MHD_Response * response;
-    int ret;
+typedef struct {
 
-    /* This detects first call of the function when we have the HTTP header. 
-       We accept all headers. */
-    if (*ptr) {
-	/* The first time we only have headers, don't respond. */
-	*ptr = (void*) 1;
-	return MHD_YES;
+    struct MHD_PostProcessor* postproc;
+    char* query;
+    int query_len;
+    char* output;
+    int output_len;
+    char* callback;
+    int callback_len;
+    
+} connection_info;
+
+const int post_buffer_size = 8192;
+
+int iterate_post(void* cls, enum MHD_ValueKind kind, const char* key,
+		 const char* filename, const char* content_type,
+		 const char* transfer_encoding, const char* data,
+		 uint64_t off, size_t size)
+{
+    connection_info* con = (connection_info*) cls;
+
+    if (strcmp(key, "query") == 0) {
+	
+	if (con->query)
+	    con->query = (char*) realloc(con->query, con->query_len + size + 1);
+	else
+	    con->query = (char*) malloc(size + 1);
+
+	memcpy(con->query + con->query_len, data, size);
+
+	con->query_len += size;
+	con->query[con->query_len] = 0;
+
     }
 
-    const char* cb;
-    const char* output;
-    const char* query;
+    if (strcmp(key, "output") == 0) {
+	
+	if (con->output)
+	    con->output = (char*) realloc(con->output,
+					  con->output_len + size + 1);
+	else
+	    con->output = (char*) malloc(size + 1);
+
+	memcpy(con->output + con->output_len, data, size);
+
+	con->output_len += size;
+	con->output[con->output_len] = 0;
+
+    }
+
+    if (strcmp(key, "callback") == 0) {
+	
+	if (con->callback)
+	    con->callback = (char*) realloc(con->callback,
+				    con->callback_len + size + 1);
+	else
+	    con->callback = (char*) malloc(size + 1);
+
+	memcpy(con->callback + con->callback_len, data, size);
+
+	con->callback_len += size;
+	con->callback[con->callback_len] = 0;
+
+    }
+
+}
+
+int sparql(MHD_Connection* connection, const char* query, const char* output,
+	    const char* callback)
+{
+
+    struct MHD_Response* response;
+    int ret;
     
     librdf_query* qry = 0;
     librdf_query_results* results = 0;
@@ -54,26 +106,9 @@ static int request_handler(void* cls, struct MHD_Connection * connection,
 
     try {
 
-	/* Get arguments: output, query and callback. */
-	output = MHD_lookup_connection_value(connection,
-					     MHD_GET_ARGUMENT_KIND,
-					     "output");
-	query = MHD_lookup_connection_value(connection,
-					    MHD_GET_ARGUMENT_KIND,
-					    "query");
-	cb = MHD_lookup_connection_value(connection,
-					 MHD_GET_ARGUMENT_KIND,
-					 "callback");
-
-	/* Only respond to the GET method. */
-	if (0 != strcmp(method, "GET"))
-	    return MHD_NO; /* unexpected method */
-	
-	/* Flip out if GET has a payload. */
-	if (0 != *upload_data_size)
-	    return MHD_NO; /* upload data in a GET!? */
-	
-	*ptr = NULL; /* clear context pointer */
+	if (query) {
+	    printf("Query: %s\n", query);
+	}
 
 	/* Create new query */
 	qry = librdf_new_query(world, "sparql", 0,
@@ -90,6 +125,15 @@ static int request_handler(void* cls, struct MHD_Connection * connection,
 	librdf_free_query(qry);
 	qry = 0;
 
+	enum { IS_GRAPH, IS_BINDINGS, IS_BOOLEAN } results_type;
+
+	if (librdf_query_results_is_graph(results))
+	    results_type = IS_GRAPH;
+	else if (librdf_query_results_is_bindings(results))
+	    results_type = IS_BINDINGS;
+	if (librdf_query_results_is_boolean(results))
+	    results_type = IS_BOOLEAN;
+
 	/* Convert query results to either JSON or XML */
 	if (output && strcmp(output, "json") == 0) {
 
@@ -98,12 +142,33 @@ static int request_handler(void* cls, struct MHD_Connection * connection,
 	    out = librdf_query_results_to_counted_string2(results, "json",
 							  0, 0, 0,
 							  &len);
+	} else if (results_type == IS_GRAPH) {
+
+	    mime_type = "application/rdf+xml";
+
+	    librdf_stream* strm = librdf_query_results_as_stream(results);
+	    if (strm == 0)
+		throw std::runtime_error("Couldn't stream results");
+	    
+	    librdf_serializer* srl = librdf_new_serializer(world, "rdfxml",
+							   0, 0);
+	    if (srl == 0)
+		throw std::runtime_error("Couldn't create serialiser");
+    
+	     out =
+		 librdf_serializer_serialize_stream_to_counted_string(srl, 0,
+								      strm,
+								      &len);
+
+	     librdf_free_serializer(srl);
+	     librdf_free_stream(strm);
+
 	} else {
 
 	    /* XML */
-	    mime_type = "text/plain";  // FIXME
-	    out = librdf_query_results_to_counted_string2(results, 0, 0, 0, 0,
-							  &len);
+	    mime_type = "application/sparql-results+xml";
+	    out = librdf_query_results_to_counted_string2(results, "xml", 0, 0,
+							  0, &len);
 	}
 
 	if (out == 0)
@@ -128,19 +193,20 @@ static int request_handler(void* cls, struct MHD_Connection * connection,
 
     }
 
-    if (cb != 0) {
+    if (callback != 0) {
 
 	/* JSONP request case.  Need to convert DATA into callback(DATA) */
-	int len2 = strlen(cb) + 2 + len;
+	int len2 = strlen(callback) + 2 + len;
 	char* out2 = (char*) malloc(len2);
 	char* ptr = out2;
-	strcpy(ptr, cb);
-	ptr += strlen(cb);
+	strcpy(ptr, callback);
+	ptr += strlen(callback);
 	*(ptr++) = '(';
 	memcpy(ptr, out, len);
 	ptr += len;
 	*ptr = ')';
 
+	write(1, out2, len2);
 	/* Create HTTP response. */
 	response = MHD_create_response_from_buffer (len2, 
 						    (void*) out2,
@@ -149,6 +215,8 @@ static int request_handler(void* cls, struct MHD_Connection * connection,
 	librdf_free_memory(out);
 	
     } else {
+	
+	write(1, out, len);
 
 	/* Create HTTP response */
 	response = MHD_create_response_from_buffer (len, 
@@ -175,6 +243,116 @@ static int request_handler(void* cls, struct MHD_Connection * connection,
     MHD_destroy_response(response);
     
     return ret;
+}
+
+/* HTTP request handler. */
+static int request_handler(void* cls, struct MHD_Connection* connection,
+			   const char* url, const char* method,
+			   const char* version, const char * upload,
+			   size_t* upload_size, void** ptr)
+{
+    
+    connection_info* con;
+
+    /* This detects first call of the function when we have the HTTP header. 
+       We accept all headers. */
+    if (*ptr == 0) {
+
+	con = (connection_info*) malloc(sizeof(connection_info));
+	if (con == 0) {
+	    fprintf(stderr, "malloc failed");
+	    return MHD_NO;
+	}
+
+	con->postproc = 0;
+	con->query = 0;
+	con->query_len = 0;
+	con->callback = 0;
+	con->callback_len = 0;
+	con->output = 0;
+	con->output_len = 0;
+	*ptr = con;
+
+	if (strcmp(method, "POST") == 0) {
+	    con->postproc = MHD_create_post_processor(connection,
+						      post_buffer_size,
+						      iterate_post,
+						      (void*) con);
+	    if (con->postproc == 0) {
+		fprintf(stderr, "Create post processor failed.\n");
+		free(con);
+		return MHD_NO;
+	    }
+	    
+	}
+
+	return MHD_YES;
+    }
+
+    con = (connection_info* ) *ptr;
+
+    if (strcmp(method, "GET") == 0) {
+
+	const char* cb = 0;
+	const char* output = 0;
+	const char* query = 0;
+	const char* accept = 0;
+
+	/* Get arguments: output, query and callback. */
+	output = MHD_lookup_connection_value(connection,
+					     MHD_GET_ARGUMENT_KIND,
+					     "output");
+	query = MHD_lookup_connection_value(connection,
+					    MHD_GET_ARGUMENT_KIND,
+					    "query");
+	cb = MHD_lookup_connection_value(connection,
+					 MHD_GET_ARGUMENT_KIND,
+					 "callback");
+
+	// FIXME: Should use the accept information to work out what to send
+	// back.
+	accept = MHD_lookup_connection_value(connection,
+					     MHD_HEADER_KIND,
+					     "accept");
+
+	if (query == 0)
+	    return MHD_NO;
+	
+	return sparql(connection, query, output, cb); 
+	
+    }
+
+    if (strcmp(method, "POST") == 0) {
+
+	if (*upload_size != 0) {
+	    MHD_post_process(con->postproc, upload, *upload_size);
+	    *upload_size = 0;
+	    return MHD_YES;
+	}
+
+	printf("DONE\n");
+
+	return sparql(connection, con->query, con->output, con->callback);
+
+    }
+
+    return MHD_NO;
+
+}
+
+void request_completed(void* cls, struct MHD_Connection* connection,
+		       void** con_cls, enum MHD_RequestTerminationCode code)
+{
+
+    connection_info* con = (connection_info*) *con_cls;
+    if (con) {
+	if (con->postproc)
+	    MHD_destroy_post_processor(con->postproc);
+	if (con->query) free(con->query);
+	if (con->output) free(con->output);
+	if (con->callback) free(con->callback);
+	free(con);
+    }
 }
 
 int main(int argc, char ** argv)
@@ -210,6 +388,7 @@ int main(int argc, char ** argv)
     /* libmicrohttpd web server. */
     d = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, atoi(argv[1]),
 			 NULL, NULL, &request_handler, (void *) model,
+			 MHD_OPTION_NOTIFY_COMPLETED, &request_completed, 0,
 			 MHD_OPTION_END);
     if (d == NULL)
 	exit(1);
