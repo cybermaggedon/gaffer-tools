@@ -153,7 +153,6 @@ int gaffer_http_post(gaffer_comms* gc, const char* url,
 	curl_easy_setopt(gc->curl, CURLOPT_READDATA, (void*) up);
 	curl_easy_setopt(gc->curl, CURLOPT_READFUNCTION, &http_upload_callback);
 	curl_easy_setopt(gc->curl, CURLOPT_CUSTOMREQUEST, method);
-	curl_easy_setopt(gc->curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 1);
     } else {
 	curl_easy_setopt(gc->curl, CURLOPT_UPLOAD, 0);
 	curl_easy_setopt(gc->curl, CURLOPT_CUSTOMREQUEST, method);
