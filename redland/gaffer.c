@@ -194,6 +194,7 @@ char* node_helper(librdf_storage* storage, librdf_node* node, char node_type)
 
     const char* integer_type = "http://www.w3.org/2001/XMLSchema#integer";
     const char* float_type = "http://www.w3.org/2001/XMLSchema#float";
+    const char* datetime_type = "http://www.w3.org/2001/XMLSchema#dateTime";
 
     char* name;
     char data_type;
@@ -216,6 +217,8 @@ char* node_helper(librdf_storage* storage, librdf_node* node, char node_type)
 		data_type = 'i';
 	    else if (strcmp(type_uri, float_type) == 0)
 		data_type = 'f';
+	    else if (strcmp(type_uri, datetime_type) == 0)
+		data_type = 'd';
 	    else
 		data_type = 's';
 	}
@@ -654,6 +657,18 @@ librdf_node* node_constructor_helper(librdf_world* world, const char* t)
 	librdf_free_uri(dt);
 	return o;
     }
+
+    if (t[2] == 'd') {
+	librdf_uri* dt =
+	    librdf_new_uri(world,
+			   "http://www.w3.org/2001/XMLSchema#dateTime");
+	if (dt == 0)
+	    return 0;
+
+	o = librdf_new_node_from_typed_literal(world, t + 4, 0, dt);
+	librdf_free_uri(dt);
+	return o;
+    }    
 
     return librdf_new_node_from_literal(world,
 					(unsigned char*) t + 4, 0, 0);
