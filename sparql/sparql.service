@@ -1,0 +1,13 @@
+
+[Unit]
+Description=SPARQL endpoint
+Documentation=
+
+[Service]
+PIDFile=/var/run/sparql.pid
+ExecStart=/usr/local/bin/sparql 8081
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

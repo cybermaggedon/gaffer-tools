@@ -5,13 +5,14 @@
 #include <stdio.h>
 #include <redland.h>
 #include <stdexcept>
+#include <iostream>
 
 #ifndef STORE
 #define STORE "gaffer"
 #endif
 
 #ifndef STORE_NAME
-#define STORE_NAME "http://localhost:8080/example-rest/v1"
+#define STORE_NAME "http://localhost:9001/example-rest/v1"
 #endif
 
 #ifndef BASE_URI
@@ -176,6 +177,8 @@ int sparql(MHD_Connection* connection, const char* query, const char* output,
 	
     } catch (std::exception& e) {
 
+        std::cerr << e.what() << std::endl;
+
 	if (qry)
 	    librdf_free_query(qry);
 
@@ -206,7 +209,6 @@ int sparql(MHD_Connection* connection, const char* query, const char* output,
 	ptr += len;
 	*ptr = ')';
 
-	write(1, out2, len2);
 	/* Create HTTP response. */
 	response = MHD_create_response_from_buffer (len2, 
 						    (void*) out2,
@@ -216,8 +218,6 @@ int sparql(MHD_Connection* connection, const char* query, const char* output,
 	
     } else {
 	
-	write(1, out, len);
-
 	/* Create HTTP response */
 	response = MHD_create_response_from_buffer (len, 
 						    (void*) out,
@@ -329,8 +329,6 @@ static int request_handler(void* cls, struct MHD_Connection* connection,
 	    *upload_size = 0;
 	    return MHD_YES;
 	}
-
-	printf("DONE\n");
 
 	return sparql(connection, con->query, con->output, con->callback);
 

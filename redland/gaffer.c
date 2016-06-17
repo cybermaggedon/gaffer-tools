@@ -396,7 +396,7 @@ librdf_storage_gaffer_open(librdf_storage* storage, librdf_model* model)
     librdf_storage_gaffer_instance* context;
 
     context = (librdf_storage_gaffer_instance*)storage->instance;
-
+    
     int ret = gaffer_test(context->comms);
 
     if (ret < 0) {
@@ -836,12 +836,13 @@ librdf_storage_gaffer_serialise(librdf_storage* storage)
     gaffer_query* qry = gaffer_query_(0, 0, 0, &are_spo, &filter_spo, &path);
 
     gaffer_results* results = gaffer_find(context->comms, path, qry);
+
+    gaffer_query_free(qry);
+    
     if (results == 0) {
 	fprintf(stderr, "Query execute failed.\n");
 	exit(1);
     }
-
-    gaffer_query_free(qry);
 
     scontext->results = results;
     scontext->iterator = gaffer_iterator_create(results);
@@ -962,6 +963,11 @@ librdf_storage_gaffer_find_statements(librdf_storage* storage,
     gaffer_results* results = gaffer_find(context->comms, path, query);
 
     gaffer_query_free(query);
+
+    if (results == 0) {
+	fprintf(stderr, "Failed to execute query.\n");
+        return 0;
+    }
 
     scontext->results = results;
     scontext->iterator = gaffer_iterator_create(results);
