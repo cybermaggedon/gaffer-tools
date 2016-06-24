@@ -199,7 +199,7 @@ char* node_helper(librdf_storage* storage, librdf_node* node, char node_type)
     char* name;
     char data_type;
 
-    switch (librdf_node_get_type(node)) {
+    switch(librdf_node_get_type(node)) {
 
     case LIBRDF_NODE_TYPE_RESOURCE:
 	uri = librdf_node_get_uri(node);
@@ -758,6 +758,13 @@ gaffer_results_stream_get_statement(void* context, int flags)
 	} else {
 	    pn = node_constructor_helper(scontext->storage->world, c);
 	    on = node_constructor_helper(scontext->storage->world, b);
+	}
+
+	if (sn == 0 || pn == 0 || on == 0) {
+	    if (sn) librdf_free_node(sn);
+	    if (pn) librdf_free_node(pn);
+	    if (on) librdf_free_node(on);
+	    return 0;
 	}
 
 	scontext->statement =
