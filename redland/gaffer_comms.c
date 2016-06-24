@@ -93,6 +93,9 @@ int gaffer_http_get(gaffer_comms* gc, const char* url,
     curl_easy_setopt(gc->curl, CURLOPT_WRITEDATA, (void*) buffer);
     curl_easy_setopt(gc->curl, CURLOPT_CUSTOMREQUEST, "GET");
     curl_easy_setopt(gc->curl, CURLOPT_UPLOAD, 0);
+#ifdef CURLOPT_EXPECT_100_TIMEOUT_MS
+    curl_easy_setopt(gc->curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 1);
+#endif
     res = curl_easy_perform(gc->curl);
 
     free(url2);
@@ -134,6 +137,9 @@ int gaffer_http_post(gaffer_comms* gc, const char* url,
     curl_easy_setopt(gc->curl, CURLOPT_URL, url2);
     curl_easy_setopt(gc->curl, CURLOPT_WRITEFUNCTION, &http_dload_callback);
     curl_easy_setopt(gc->curl, CURLOPT_WRITEDATA, (void*) down);
+#ifdef CURLOPT_EXPECT_100_TIMEOUT_MS
+    curl_easy_setopt(gc->curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 1);
+#endif
 
     struct curl_slist* headers = 0;
     char *cth = malloc(strlen(content_type) + 20);
@@ -142,7 +148,6 @@ int gaffer_http_post(gaffer_comms* gc, const char* url,
 	return -1;
     }
     sprintf(cth, "Content-Type: %s", content_type);
-	 
 
     if (up) {
 
