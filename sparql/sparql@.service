@@ -1,0 +1,9 @@
+[Unit]
+Description=SPARQL endpoint per-connection server daemon
+
+[Service]
+ExecStart=/usr/local/bin/sparql
+StandardInput=socket
+StandardOutput=socket
+StandardError=journal
+

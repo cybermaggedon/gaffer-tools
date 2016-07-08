@@ -1,0 +1,11 @@
+
+[Unit]
+Description=SPARQL socket
+
+[Socket]
+ListenStream=8081
+Accept=yes
+
+[Install]
+WantedBy=sockets.target
+

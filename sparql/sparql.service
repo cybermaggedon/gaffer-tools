@@ -2,11 +2,14 @@
 [Unit]
 Description=SPARQL endpoint
 Documentation=
+Requires=sparql.socket
 
 [Service]
-PIDFile=/var/run/sparql.pid
-ExecStart=/usr/local/bin/sparql 8081
-Restart=on-failure
+Type=simple
+ExecStart=/usr/bin/cat /etc/passwd
+#/usr/local/bin/sparql
+StandardInput=socket
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target

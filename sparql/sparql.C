@@ -12,7 +12,7 @@
 #endif
 
 #ifndef STORE_NAME
-#define STORE_NAME "http://localhost:9001/example-rest/v1"
+#define STORE_NAME "http://localhost:8080/example-rest/v1"
 #endif
 
 #ifndef BASE_URI
@@ -356,50 +356,58 @@ void request_completed(void* cls, struct MHD_Connection* connection,
 int main(int argc, char ** argv)
 {
 
-    /* Create RDF world. */
-    world = librdf_new_world();
+    try {
 
-    /* Connect to storage. */
-    librdf_storage* storage =
-	librdf_new_storage(world, STORE, STORE_NAME, "");
-    if (storage == 0)
-	throw std::runtime_error("Didn't get storage");
+	/* Create RDF world. */
+	world = librdf_new_world();
 
-    /* Triple store on the storage. */
-    model = librdf_new_model(world, storage, 0);
-    if (model == 0)
-	throw std::runtime_error("Couldn't construct model");
+	/* Connect to storage. */
+	librdf_storage* storage =
+	    librdf_new_storage(world, STORE, STORE_NAME, "");
+	if (storage == 0)
+	    throw std::runtime_error("Didn't get storage");
+	
+	/* Triple store on the storage. */
+	model = librdf_new_model(world, storage, 0);
+	if (model == 0)
+	    throw std::runtime_error("Couldn't construct model");
+	
+	/* Base URI for relative data. */
+	base_uri =
+	    librdf_new_uri(world, (const unsigned char*) BASE_URI);
+	if (base_uri == 0)
+	    throw std::runtime_error("Couldn't parse URI.");
+	
+	struct MHD_Daemon * d;
+	/* libmicrohttpd web server. */
+	d = MHD_start_daemon(
+	    MHD_USE_SELECT_INTERNALLY | MHD_USE_NO_LISTEN_SOCKET,
+	    0,
+	    NULL, NULL, &request_handler, (void *) model,
+	    MHD_OPTION_NOTIFY_COMPLETED, &request_completed, 0,
+	    MHD_OPTION_END);
+	if (d == NULL)
+	    exit(1);
 
-    /* Base URI for relative data. */
-    base_uri =
-    	librdf_new_uri(world, (const unsigned char*) BASE_URI);
-    if (base_uri == 0)
-    	throw std::runtime_error("Couldn't parse URI.");
-  
-    struct MHD_Daemon * d;
+	int ret = MHD_add_connection(d, 0, 0, 0);
+	if (ret != 0) {
+	    std::cerr << "Add connection failed." << std::endl;
+	    exit(1);
+	}
+	
+	/* Wait forever. */
+	while (1) {
+	    sleep(10);
+	}
 
-    if (argc != 2) {
-	printf("%s PORT\n", argv[0]);
-	return 1;
-    }
+	MHD_stop_daemon(d);
 
-    /* libmicrohttpd web server. */
-    d = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, atoi(argv[1]),
-			 NULL, NULL, &request_handler, (void *) model,
-			 MHD_OPTION_NOTIFY_COMPLETED, &request_completed, 0,
-			 MHD_OPTION_END);
-    if (d == NULL)
+	exit(0);
+
+    } catch (std::exception& e) {
+	std::cerr << "Exception: " << e.what() << std::endl;
 	exit(1);
-
-    /* Wait forever. */
-    while (1) {
-	sleep(10);
     }
-
-    MHD_stop_daemon(d);
-
-    exit(0);
     
 }
-
 
