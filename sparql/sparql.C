@@ -246,6 +246,19 @@ int sparql(MHD_Connection* connection, const char* query, const char* output,
     return ret;
 }
 
+static int connection(void* cls, struct MHD_Connection* conn,
+		      void** socket_context,
+		      MHD_ConnectionNotificationCode toe)
+{
+
+    if (toe == MHD_CONNECTION_NOTIFY_CLOSED)
+	exit(0);
+
+    return 0;
+
+}
+
+
 /* HTTP request handler. */
 static int request_handler(void* cls, struct MHD_Connection* connection,
 			   const char* url, const char* method,
@@ -390,6 +403,7 @@ int main(int argc, char ** argv)
 	    0,
 	    NULL, NULL, &request_handler, (void *) model,
 	    MHD_OPTION_NOTIFY_COMPLETED, &request_completed, 0,
+	    MHD_OPTION_NOTIFY_CONNECTION, &connection, 0,
 	    MHD_OPTION_END);
 	if (d == NULL)
 	    exit(1);
