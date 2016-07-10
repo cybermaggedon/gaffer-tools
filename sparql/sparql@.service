@@ -1,9 +1,13 @@
 [Unit]
 Description=SPARQL endpoint per-connection server daemon
+Requires=sparql.socket
 
 [Service]
 ExecStart=/usr/local/bin/sparql
 StandardInput=socket
-StandardOutput=socket
 StandardError=journal
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
 

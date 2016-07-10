@@ -6,6 +6,7 @@
 #include <redland.h>
 #include <stdexcept>
 #include <iostream>
+#include <netinet/in.h>
 
 #ifndef STORE
 #define STORE "gaffer"
@@ -355,6 +356,7 @@ void request_completed(void* cls, struct MHD_Connection* connection,
 
 int main(int argc, char ** argv)
 {
+//    sleep(1);
 
     try {
 
@@ -381,7 +383,10 @@ int main(int argc, char ** argv)
 	struct MHD_Daemon * d;
 	/* libmicrohttpd web server. */
 	d = MHD_start_daemon(
-	    MHD_USE_SELECT_INTERNALLY | MHD_USE_NO_LISTEN_SOCKET,
+//	    MHD_USE_SELECT_INTERNALLY |
+	    MHD_USE_THREAD_PER_CONNECTION |
+	    MHD_USE_NO_LISTEN_SOCKET |
+	    MHD_USE_PIPE_FOR_SHUTDOWN,
 	    0,
 	    NULL, NULL, &request_handler, (void *) model,
 	    MHD_OPTION_NOTIFY_COMPLETED, &request_completed, 0,
@@ -389,8 +394,17 @@ int main(int argc, char ** argv)
 	if (d == NULL)
 	    exit(1);
 
-	int ret = MHD_add_connection(d, 0, 0, 0);
-	if (ret != 0) {
+	struct sockaddr_in addr;
+
+	socklen_t len = sizeof(addr);
+	int ret = getsockname(0, (struct sockaddr*) &addr, &len);
+	if (ret < 0) {
+	    std::cerr << "Couldn't get socket address." << std::endl;
+	    exit(1);
+	}
+
+	ret = MHD_add_connection(d, 0, (struct sockaddr*) &addr, len);
+	if (ret != MHD_YES) {
 	    std::cerr << "Add connection failed." << std::endl;
 	    exit(1);
 	}

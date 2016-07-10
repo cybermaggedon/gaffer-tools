@@ -1,5 +1,5 @@
 
-CXXFLAGS += -I/usr/include/raptor2 -I/usr/include/rasqal
+CXXFLAGS += -I/usr/include/raptor2 -I/usr/include/rasqal -g
 
 all: sparql
 
